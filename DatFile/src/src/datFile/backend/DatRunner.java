@@ -18,6 +18,6 @@ public class DatRunner {
 		datPrint.println("Herro");
 		datPrint.println("Do you ruff me?");
 		String response = myScan.nextLine();
-		datPrint.println("I don't know what" + response + " means but I'll take that as a yesh . . .");
+		datPrint.println("I don't know what " + response + " means but I'll take that as a yesh . . .");
 	}
 }
