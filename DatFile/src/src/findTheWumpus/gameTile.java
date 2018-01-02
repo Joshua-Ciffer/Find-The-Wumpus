@@ -1,6 +1,11 @@
 package src.findTheWumpus;
 
-public class gameTile {
+/**
+ * 
+ * @author Joshua Ciffer, Brian Williams
+ * @version 01/02/2018
+ */
+public class GameTile {
 	//made all dem variables
 	boolean wumpusHere = false;
 	boolean explored = false;
