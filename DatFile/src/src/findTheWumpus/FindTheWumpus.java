@@ -1,6 +1,7 @@
 package src.findTheWumpus;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 /**
  * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-it-takes-for-multiple-threads-to-finish-executin
@@ -30,8 +31,8 @@ public class FindTheWumpus {
 //		endTurn();
 	}
 
-	/**
-	 * This method creates a new GameTile[][] with the given parameters, and with all of the game items spawned in random positions. 
+		/**
+	 * This method creates a new GameTile[][] with the given parameters, and with all of the game items spawned in random positions.  The game board will always be a rectangle, the array will never be ragged. 
 	 * 
 	 * @param numRows - The number of rows in the game board.
 	 * @param numCols - The number of columns in the game board.
@@ -44,7 +45,7 @@ public class FindTheWumpus {
 		int torchesPlaced = 0;
 		for (int row = 0 ; row < newBoard.length ; row++) {
 			for (int col = 0 ; col < newBoard[row].length ; col++) {
-				newBoard[row][col] = new GameTile();
+				newBoard[row][col] = new GameTile(col, row);
 				do {
 					switch (randoms.nextInt(6) + 1) {
 						case 1: { // Generates Wumpus
@@ -71,6 +72,8 @@ public class FindTheWumpus {
 							} else {
 								newBoard[row][col].playerHere = true;
 								playerPlaced = true;
+								playerRow = row;
+								playerCol = col;
 								break;
 							}
 						}
@@ -178,8 +181,34 @@ public class FindTheWumpus {
 		}
 	}
 
-	public static void move() {
-		// fill in the blank
+	public static void move(String direction) {
+		switch (direction.toLowerCase()) {
+			case "north": {
+				
+				endTurn();
+				break;
+			}
+			case "east": {
+				
+				endTurn();
+				break;
+			}
+			case "south": {
+				
+				endTurn();
+				break;
+			}
+			case "west": {
+				
+				endTurn();
+				break;
+			}
+			default: {
+				System.out.println("Error! Choose a direction you idiot.");
+				endTurn();
+				break;
+			}
+		}
 	}
 
 	public static void useCompass() {
