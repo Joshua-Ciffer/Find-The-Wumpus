@@ -18,7 +18,7 @@ public class FindTheWumpus {
 	static boolean compassFound = false;
 	static GameTile[][] board = new GameTile[10][10];
 	static Random randoms = new Random();
-		static int intResponse;
+	static int intResponse;
 	static String response;
 	static int playerRow;
 	static int playerCol;
