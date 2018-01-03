@@ -1,3 +1,4 @@
+
 package src.findTheWumpus;
 import java.util.Random;
 
@@ -19,36 +20,67 @@ public class FindTheWumpus {
 
 	// also made the methods, but didn't fill it in
 	public static void main(String[] args) {
-		menu();
-		endTurn();
+		
+//		menu();
+//		endTurn();
 	}
 
-	public static GameTile[][] makeBoard(int numRows,int numCols) {
+	public static GameTile[][] makeBoard(int numRows, int numCols, int numTorches) {
 		GameTile[][] newBoard = new GameTile[numRows][numCols];
-		for (int row = 0; row < newBoard.length; row++) {
-			for (int col = 0; col < newBoard[row].length; col++) {
+		boolean wumpusPlaced = false, weaponPlaced = false, playerPlaced = false, compassPlaced = false;
+		int torchesPlaced = 0;
+		for (int row = 0 ; row < newBoard.length ; row++) {
+			for (int col = 0 ; col < newBoard[row].length ; col++) {
 				newBoard[row][col] = new GameTile();
 				do {
 					switch (randoms.nextInt(7) + 1) {
-						case 1: {
-							newBoard[row][col].wumpusHere = true;
+						case 1: { // Generates Wumpus
+							if (wumpusPlaced) {
+								continue;
+							} else {
+								newBoard[row][col].wumpusHere = true;
+								wumpusPlaced = true;
+								break;
+							}
 						}
-						case 2: {
-							newBoard[row][col].playerHere = true;
+						case 2: { // Generates Weapon
+							if (weaponPlaced) {
+								continue;
+							} else {
+								newBoard[row][col].weaponHere = true;
+								weaponPlaced = true;
+								break;
+							}
 						}
-						case 3: {
-							
+						case 3: { // Generates Player
+							if (playerPlaced) {
+								continue;
+							} else {
+								newBoard[row][col].playerHere = true;
+								playerPlaced = true;
+								break;
+							}
 						}
-						case 4: {
-							
+						case 4: { // Generates Torch
+							if (torchesPlaced == numTorches) {
+								continue;
+							} else {
+								newBoard[row][col].torchHere = true;
+								torchesPlaced++;
+								break;
+							}
 						}
-						case 5: {
-							
-						}
-						case 6: {
-							
+						case 5: { // Generates Compass
+							if (compassPlaced) {
+								continue;
+							} else {
+								newBoard[row][col].compassHere = true;
+								compassPlaced = true;
+								break;
+							}
 						}
 					}
+					break;
 				} while (true);
 			}
 		}
