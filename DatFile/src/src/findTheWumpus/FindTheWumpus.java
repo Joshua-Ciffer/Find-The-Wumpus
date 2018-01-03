@@ -1,4 +1,3 @@
-
 package src.findTheWumpus;
 import java.util.Random;
 
@@ -12,14 +11,15 @@ public class FindTheWumpus {
 	// Thanks for getting ur shit done bud.
 
 	// made dem variables
-	boolean foundWeapon = false;
-	int torchesFound = 0;
-	boolean compassFound = false;
-	GameTile[][] board = new GameTile[10][10];
+	static boolean foundWeapon = false;
+	static int torchesFound = 0;
+	static boolean compassFound = false;
+	static GameTile[][] board = new GameTile[10][10];
 	static Random randoms = new Random();
 
 	// also made the methods, but didn't fill it in
 	public static void main(String[] args) {
+		board = makeBoard(5, 50, 5);
 		
 //		menu();
 //		endTurn();
@@ -33,7 +33,7 @@ public class FindTheWumpus {
 			for (int col = 0 ; col < newBoard[row].length ; col++) {
 				newBoard[row][col] = new GameTile();
 				do {
-					switch (randoms.nextInt(7) + 1) {
+					switch (randoms.nextInt(6) + 1) {
 						case 1: { // Generates Wumpus
 							if (wumpusPlaced) {
 								continue;
@@ -97,7 +97,24 @@ public class FindTheWumpus {
 
 	// methods the menu will call
 	public static void displayBoard() {
-		// fill in the blank
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[row].length; col++) {
+				if (board[row][col].wumpusHere) {
+					System.out.print("W\t");
+				} else if (board[row][col].weaponHere) {
+					System.out.print("A\t");
+				} else if (board[row][col].playerHere) {
+					System.out.print("M\t");
+				} else if (board[row][col].torchHere) {
+					System.out.print("T\t");
+				} else if (board[row][col].compassHere) {
+					System.out.print("C\t");
+				} else {
+					System.out.print("X\t");
+				}
+			}
+			System.out.print("\n");
+		}
 	}
 
 	public static void move() {
