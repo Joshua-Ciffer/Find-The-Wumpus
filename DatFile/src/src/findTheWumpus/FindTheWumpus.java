@@ -25,6 +25,14 @@ public class FindTheWumpus {
 //		endTurn();
 	}
 
+	/**
+	 * This method creates a new GameTile[][] with the given parameters, and with all of the game items spawned in random positions. 
+	 * 
+	 * @param numRows - The number of rows in the game board.
+	 * @param numCols - The number of columns in the game board.
+	 * @param numTorches - The number of torches to be spawned.
+	 * @return Returns a new GameTile[][] with the specified size, number of torches, and with all of the game items spawned.
+	 */
 	public static GameTile[][] makeBoard(int numRows, int numCols, int numTorches) {
 		GameTile[][] newBoard = new GameTile[numRows][numCols];
 		boolean wumpusPlaced = false, weaponPlaced = false, playerPlaced = false, compassPlaced = false;
