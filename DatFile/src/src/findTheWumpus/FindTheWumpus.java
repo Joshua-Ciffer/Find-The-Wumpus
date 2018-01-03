@@ -1,3 +1,4 @@
+
 package src.findTheWumpus;
 import java.util.Random;
 import java.util.Scanner;
@@ -10,34 +11,35 @@ import java.util.InputMismatchException;
  * @version 01/02/2018
  */
 public class FindTheWumpus {
-	// Thanks for getting ur shit done bud.
 
-	// made dem variables
-	static boolean foundWeapon = false;
-	static int torchesFound = 0;
-	static boolean compassFound = false;
-	static GameTile[][] board = new GameTile[10][10];
-	static Random randoms = new Random();
-	static int intResponse;
-	static String response;
-	static int playerRow;
-	static int playerCol;
+	private static GameTile[][] gameBoard;
+	private static Random random = new Random();
+	private static Scanner userInput = new Scanner(System.in);
+	private static String userResponse;
+	private static int playerRow, playerCol, torchesFound;
+	private static boolean weaponFound, compassFound;
 
 	// also made the methods, but didn't fill it in
 	public static void main(String[] args) {
-		board = makeBoard(5, 50, 5);
-		
-//		menu();
-//		endTurn();
+		gameBoard = makeBoard(5, 50, 5);
+
+		// menu();
+		// endTurn();
 	}
 
-		/**
-	 * This method creates a new GameTile[][] with the given parameters, and with all of the game items spawned in random positions.  The game board will always be a rectangle, the array will never be ragged. 
+	/**
+	 * This method creates a new GameTile[][] with the given parameters, and with
+	 * all of the game items spawned in random positions. The game board will always
+	 * be a rectangle, the array will never be ragged.
 	 * 
-	 * @param numRows - The number of rows in the game board.
-	 * @param numCols - The number of columns in the game board.
-	 * @param numTorches - The number of torches to be spawned.
-	 * @return Returns a new GameTile[][] with the specified size, number of torches, and with all of the game items spawned.
+	 * @param numRows
+	 *            - The number of rows in the game board.
+	 * @param numCols
+	 *            - The number of columns in the game board.
+	 * @param numTorches
+	 *            - The number of torches to be spawned.
+	 * @return Returns a new GameTile[][] with the specified size, number of
+	 *         torches, and with all of the game items spawned.
 	 */
 	public static GameTile[][] makeBoard(int numRows, int numCols, int numTorches) {
 		GameTile[][] newBoard = new GameTile[numRows][numCols];
@@ -47,7 +49,7 @@ public class FindTheWumpus {
 			for (int col = 0 ; col < newBoard[row].length ; col++) {
 				newBoard[row][col] = new GameTile(col, row);
 				do {
-					switch (randoms.nextInt(6) + 1) {
+					switch (random.nextInt(6) + 1) {
 						case 1: { // Generates Wumpus
 							if (wumpusPlaced) {
 								continue;
@@ -104,55 +106,66 @@ public class FindTheWumpus {
 	}
 
 	public static void menu() {
-			while (true) {
+		do {
 			// Display User Options
-			System.out.println("Your Turn");
-			System.out.println("1. Display Board\n2. Move");
-			if (compassFound == false) {
-				System.out.println("3. LOCKED");
+			System.out.println("Your Turn\n(1) Display Board\n(2) Move");
+			if (compassFound) {
+				System.out.println("(3) Use Compass");
 			} else {
-				System.out.println("3. Use Compass");
+				System.out.println("(3) LOCKED.");
 			}
-			if (torchesFound < 2) {
-				System.out.println("4. LOCKED");
+			if (torchesFound > 2) {
+				System.out.println("(4) Attack Wumpus");
 			} else {
-				System.out.println("4. Attack Wumpus");
+				System.out.println("(4) LOCKED.");
 			}
-			// Selects appropiate choice
+			System.out.print("(5) Exit\nEnter an Option: ");
+			// Selects appropriate choice
 			try {
-				intResponse = myScan.nextInt();
+				userResponse = userInput.next();
 			} catch (InputMismatchException e) {
-				System.out.println("Please choose one of the available numerical responses1");
+				System.out.println("Please choose one of the available numerical responses!");
+				userInput.next();
+				continue;
 			}
-			if(intResponse == 1){
-				displayBoard();
-			}else if(intResponse == 2){
-				System.out.println("Which Direction would you like to move?");
-				response = myScan.nextLine();
-				switch (response.toLowerCase()) {
-					case "NORTH":
-						move("north");
-						myScan.nextLine();
-					case "SOUTH":
-						move("sout");
-						myScan.nextLine();
-					case "EAST":
-						move("east");
-						myScan.nextLine();
-					case "WEST":
-						move("west");
-						myScan.nextLine();
+			switch (userResponse) {
+				case "1": {	// Display Board
+					displayBoard();
+					endTurn();
+					break;
 				}
-			}else if(intResponse == 3){
-				if(compassFound == false){
-					System.out.println("This response is locked");
+				case "2": {	// Move
+					move();
+					endTurn();
+					break;
 				}
-			}else if(intResponse == 4){
-			}else{
-			
-				System.out.println("Please choose one of the available numerical responses3");
+				case "3": {	// Use Compass
+					if (compassFound) {
+						useCompass();
+						endTurn();
+						break;
+					} else {
+						System.out.println("You have not found the compass yet.");
+						continue;
+					}
+				}
+				case "4": {	// Attack Wumpus
+					if (torchesFound > 2) {
+						attackWumpus();
+						endTurn();
+						break;
+					} else {
+						System.out.println("You have not found enough torches yet.");
+						continue;
+					}
+				}
+				default: {
+					System.out.println("Enter one of the options.");
+					continue;
+				}
 			}
-		}
+			continue; // Breakpoint
+		} while (true);
 	}
 
 	public static void endTurn() {
@@ -161,17 +174,17 @@ public class FindTheWumpus {
 
 	// methods the menu will call
 	public static void displayBoard() {
-		for (int row = 0; row < board.length; row++) {
-			for (int col = 0; col < board[row].length; col++) {
-				if (board[row][col].wumpusHere) {
+		for (int row = 0 ; row < gameBoard.length ; row++) {
+			for (int col = 0 ; col < gameBoard[row].length ; col++) {
+				if (gameBoard[row][col].wumpusHere) {
 					System.out.print("W\t");
-				} else if (board[row][col].weaponHere) {
+				} else if (gameBoard[row][col].weaponHere) {
 					System.out.print("A\t");
-				} else if (board[row][col].playerHere) {
+				} else if (gameBoard[row][col].playerHere) {
 					System.out.print("M\t");
-				} else if (board[row][col].torchHere) {
+				} else if (gameBoard[row][col].torchHere) {
 					System.out.print("T\t");
-				} else if (board[row][col].compassHere) {
+				} else if (gameBoard[row][col].compassHere) {
 					System.out.print("C\t");
 				} else {
 					System.out.print("X\t");
@@ -181,25 +194,35 @@ public class FindTheWumpus {
 		}
 	}
 
-	public static void move(String direction) {
+	public static void move() {
+		do {
+			System.out.print("Which direction do you want to move?\nNorth, East, South, or West?: ");
+			try {
+				userResponse = userInput.next();
+			} catch (InputMismatchException e) {
+				System.out.println("Mismatch Exception");
+				userInput.next();
+				continue;
+			}
+		} while (true);
 		switch (direction.toLowerCase()) {
 			case "north": {
-				
+
 				endTurn();
 				break;
 			}
 			case "east": {
-				
+
 				endTurn();
 				break;
 			}
 			case "south": {
-				
+
 				endTurn();
 				break;
 			}
 			case "west": {
-				
+
 				endTurn();
 				break;
 			}
@@ -215,7 +238,7 @@ public class FindTheWumpus {
 		// fill in the blank
 	}
 
-	public static void attacWumpus() {
+	public static void attackWumpus() {
 		// fill in the blank
 	}
 }
