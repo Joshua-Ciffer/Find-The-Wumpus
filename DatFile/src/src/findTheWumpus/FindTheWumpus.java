@@ -1,4 +1,3 @@
-
 package src.findTheWumpus;
 import java.util.Random;
 import java.util.Scanner;
@@ -204,34 +203,40 @@ public class FindTheWumpus {
 				userInput.next();
 				continue;
 			}
+			switch (userResponse) {
+				case "north": {
+					gameBoard[playerRow][playerCol].playerHere = false;
+					gameBoard[playerRow][--playerCol].playerHere = true;
+					endTurn();
+					break;
+				}
+				case "east": {
+					gameBoard[playerRow][playerCol].playerHere = false;
+					gameBoard[++playerRow][playerCol].playerHere = true;
+					endTurn();
+					break;
+				}
+				case "south": {
+					gameBoard[playerRow][playerCol].playerHere = false;
+					gameBoard[playerRow][++playerCol].playerHere = true;
+					endTurn();
+					break;
+				}
+				case "west": {
+					gameBoard[playerRow][playerCol].playerHere = false;
+					gameBoard[--playerRow][playerCol].playerHere = true;
+					endTurn();
+					break;
+				}
+				default: {
+					System.out.println("Error! Choose a direction you idiot.");
+					endTurn();
+					continue;
+				}
+			}
+			break;
 		} while (true);
-		switch (direction.toLowerCase()) {
-			case "north": {
-
-				endTurn();
-				break;
-			}
-			case "east": {
-
-				endTurn();
-				break;
-			}
-			case "south": {
-
-				endTurn();
-				break;
-			}
-			case "west": {
-
-				endTurn();
-				break;
-			}
-			default: {
-				System.out.println("Error! Choose a direction you idiot.");
-				endTurn();
-				break;
-			}
-		}
+		endTurn();
 	}
 
 	public static void useCompass() {
