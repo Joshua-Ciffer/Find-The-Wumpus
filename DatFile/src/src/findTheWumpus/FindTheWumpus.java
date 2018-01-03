@@ -138,7 +138,7 @@ public class FindTheWumpus {
 		}
 		return newBoard;
 	}
-
+//Yo Bro, don't touch this menu stuff, I know everything isn't Gucci but don't touch my shit, I'll do it later
 	public static void menu() {
 		do {
 			// Display User Options
