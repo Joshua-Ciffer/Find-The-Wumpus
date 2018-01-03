@@ -11,11 +11,44 @@ import java.util.InputMismatchException;
  */
 public class FindTheWumpus {
 
+	/**
+	 * Board that contains all of the characters and items for the game.
+	 */
 	private static GameTile[][] gameBoard;
+	
+	/**
+	 * Used to generate random numbers to determine spawn points, probabilities, etc.
+	 */
 	private static Random random = new Random();
+	
+	/**
+	 * Accepts user input for menus.
+	 */
 	private static Scanner userInput = new Scanner(System.in);
+	
+	/**
+	 * Stores the user's response to a menu prompt.
+	 */
 	private static String userResponse;
-	private static int playerRow, playerCol, torchesFound;
+	
+	/**
+	 * The coordinate location of the player on the game board.
+	 */
+	private static int playerRow, playerCol;
+	
+	/**
+	 * The coordinate location of the wumpus on the game board.
+	 */
+	private static int wumpusRow, wumpusCol;
+	
+	/**
+	 * The number of torches the player has found.
+	 */
+	private static int torchesFound;
+	
+	/**
+	 * Keeps track of whether or not the player has picked up any items.
+	 */
 	private static boolean weaponFound, compassFound;
 
 	// also made the methods, but didn't fill it in
@@ -55,6 +88,8 @@ public class FindTheWumpus {
 							} else {
 								newBoard[row][col].wumpusHere = true;
 								wumpusPlaced = true;
+								wumpusRow = row;
+								wumpusCol = col;
 								break;
 							}
 						}
@@ -168,7 +203,25 @@ public class FindTheWumpus {
 	}
 
 	public static void endTurn() {
-		// fill in the blank
+		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If player is on the same spot as the wumpus.
+			if (weaponFound) {
+				attackWumpus(80);	// 80% chance of winning if the player has the weapon.
+			} else {
+				attackWumpus(20);	// 20% chance of winning.
+			}
+		} else {	// If the player did not find the wumpus, it moves to a new random spot.
+			gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+			wumpusRow = random.nextInt(gameBoard.length + 1);
+			wumpusCol = random.nextInt(gameBoard[wumpusRow].length + 1);
+			gameBoard[wumpusRow][wumpusCol].wumpusHere = true;
+			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus moved to the same spot as the player.
+				if (weaponFound) {
+					attackWumpus(65);	// 65% chance of winning if the player has the weapon.
+				} else {
+					attackWumpus(5);	// 5% chance of winning.
+				}
+			}
+		}
 	}
 
 	// methods the menu will call
@@ -243,7 +296,7 @@ public class FindTheWumpus {
 		// fill in the blank
 	}
 
-	public static void attackWumpus() {
+	public static void attackWumpus(int oddsOfWinning) {
 		// fill in the blank
 	}
 }
