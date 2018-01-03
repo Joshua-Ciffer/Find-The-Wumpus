@@ -1,5 +1,6 @@
 package src.findTheWumpus;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-it-takes-for-multiple-threads-to-finish-executin
@@ -16,6 +17,10 @@ public class FindTheWumpus {
 	static boolean compassFound = false;
 	static GameTile[][] board = new GameTile[10][10];
 	static Random randoms = new Random();
+		static int intResponse;
+	static String response;
+	static int playerRow;
+	static int playerCol;
 
 	// also made the methods, but didn't fill it in
 	public static void main(String[] args) {
@@ -96,7 +101,55 @@ public class FindTheWumpus {
 	}
 
 	public static void menu() {
-		// fill in the blank
+			while (true) {
+			// Display User Options
+			System.out.println("Your Turn");
+			System.out.println("1. Display Board\n2. Move");
+			if (compassFound == false) {
+				System.out.println("3. LOCKED");
+			} else {
+				System.out.println("3. Use Compass");
+			}
+			if (torchesFound < 2) {
+				System.out.println("4. LOCKED");
+			} else {
+				System.out.println("4. Attack Wumpus");
+			}
+			// Selects appropiate choice
+			try {
+				intResponse = myScan.nextInt();
+			} catch (InputMismatchException e) {
+				System.out.println("Please choose one of the available numerical responses1");
+			}
+			if(intResponse == 1){
+				displayBoard();
+			}else if(intResponse == 2){
+				System.out.println("Which Direction would you like to move?");
+				response = myScan.nextLine();
+				switch (response.toLowerCase()) {
+					case "NORTH":
+						move("north");
+						myScan.nextLine();
+					case "SOUTH":
+						move("sout");
+						myScan.nextLine();
+					case "EAST":
+						move("east");
+						myScan.nextLine();
+					case "WEST":
+						move("west");
+						myScan.nextLine();
+				}
+			}else if(intResponse == 3){
+				if(compassFound == false){
+					System.out.println("This response is locked");
+				}
+			}else if(intResponse == 4){
+			}else{
+			
+				System.out.println("Please choose one of the available numerical responses3");
+			}
+		}
 	}
 
 	public static void endTurn() {
