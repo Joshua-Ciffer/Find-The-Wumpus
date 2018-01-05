@@ -297,9 +297,15 @@ abstract class FindTheWumpus {
 		if (compassFound) {
 			System.out.println("What item would you like to search for?");
 			if(weaponFound == false){
-				continue;
-			}else{
-				System.out.println("");
+				System.out.println("(1) Weapon - FOUND");
+			}else if(weaponFound == true){
+				System.out.println("(1) Weapon");
+			}
+			else if(torchesFound == 2){
+				System.out.println("(2) Torches - FOUND");
+			}
+			else if(torchesFound == 1){
+				System.out.println("(3) Torches - 1 Found");
 			}
 		} else {
 			System.out.println("You have not found the compass yet.");
