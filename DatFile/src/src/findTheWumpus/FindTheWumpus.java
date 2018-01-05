@@ -208,8 +208,7 @@ abstract class FindTheWumpus {
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) { // If player
 																	// is on the
 																	// same spot
-																	// as the
-																	// wumpus.
+															// wumpus.
 			if (weaponFound) {
 				attackWumpus(80); // 80% chance of winning if the player has the
 									// weapon.
@@ -246,20 +245,20 @@ abstract class FindTheWumpus {
 
 	// methods the menu will call
 	static void displayBoard() {
-		for (int row = 0; row < gameBoard.length; row++) {
-			for (int col = 0; col < gameBoard[row].length; col++) {
+		for (int row = 0 ; row < gameBoard.length ; row++) {
+			for (int col = 0 ; col < gameBoard[row].length ; col++) {
 				if (gameBoard[row][col].wumpusHere) {
-					System.out.print("W\t");
+					System.out.print("(" + row + ", " + col + ") " + "W\t");
 				} else if (gameBoard[row][col].weaponHere) {
-					System.out.print("A\t");
+					System.out.print("(" + row + ", " + col + ") " + "A\t");
 				} else if (gameBoard[row][col].playerHere) {
-					System.out.print("P\t");
+					System.out.print("(" + row + ", " + col + ") " + "P\t");
 				} else if (gameBoard[row][col].torchHere) {
-					System.out.print("T\t");
+					System.out.print("(" + row + ", " + col + ") " + "T\t");
 				} else if (gameBoard[row][col].compassHere) {
-					System.out.print("C\t");
+					System.out.print("(" + row + ", " + col + ") " + "C\t");
 				} else {
-					System.out.print("X\t");
+					System.out.print("(" + row + ", " + col + ") " + "X\t");
 				}
 			}
 			System.out.print("\n");
