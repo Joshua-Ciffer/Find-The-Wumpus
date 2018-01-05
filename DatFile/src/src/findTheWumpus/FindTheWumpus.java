@@ -1,11 +1,13 @@
 package src.findTheWumpus;
+
 import java.util.Random;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
 /**
- * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-it-takes-for-multiple-threads-to-finish-executin
- * <br><br>
+ * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-
+ * it-takes-for-multiple-threads-to-finish-executin <br>
+ * <br>
  * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
@@ -17,37 +19,38 @@ abstract class FindTheWumpus {
 	 * Board that contains all of the characters and items for the game.
 	 */
 	static GameTile[][] gameBoard;
-	
+
 	/**
-	 * Used to generate random numbers to determine spawn points, probabilities, etc.
+	 * Used to generate random numbers to determine spawn points, probabilities,
+	 * etc.
 	 */
 	static Random random = new Random();
-	
+
 	/**
 	 * Accepts user input for menus.
 	 */
 	static Scanner userInput = new Scanner(System.in);
-	
+
 	/**
 	 * Stores the user's response to a menu prompt.
 	 */
 	static String userResponse;
-	
+
 	/**
 	 * The coordinate location of the player on the game board.
 	 */
 	static int playerRow, playerCol;
-	
+
 	/**
 	 * The coordinate location of the wumpus on the game board.
 	 */
 	static int wumpusRow, wumpusCol;
-	
+
 	/**
 	 * The number of torches the player has found.
 	 */
 	static int torchesFound;
-	
+
 	/**
 	 * Keeps track of whether or not the player has picked up any items.
 	 */
@@ -59,9 +62,9 @@ abstract class FindTheWumpus {
 	}
 
 	/**
-	 * This method creates a new GameTile[][] with the given parameters, and with
-	 * all of the game items spawned in random positions. The game board will always
-	 * be a rectangle, the array will never be ragged.
+	 * This method creates a new GameTile[][] with the given parameters, and
+	 * with all of the game items spawned in random positions. The game board
+	 * will always be a rectangle, the array will never be ragged.
 	 * 
 	 * @param numRows
 	 *            - The number of rows in the game board.
@@ -76,60 +79,60 @@ abstract class FindTheWumpus {
 		GameTile[][] newBoard = new GameTile[numRows][numCols];
 		boolean wumpusPlaced = false, weaponPlaced = false, playerPlaced = false, compassPlaced = false;
 		int torchesPlaced = 0;
-		for (int row = 0 ; row < newBoard.length ; row++) {
-			for (int col = 0 ; col < newBoard[row].length ; col++) {
+		for (int row = 0; row < newBoard.length; row++) {
+			for (int col = 0; col < newBoard[row].length; col++) {
 				newBoard[row][col] = new GameTile(row, col);
 				while (true) {
 					switch (random.nextInt(6) + 1) {
-						case 1: { // Generates Wumpus
-							if (wumpusPlaced) {
-								continue;
-							} else {
-								newBoard[row][col].wumpusHere = true;
-								wumpusPlaced = true;
-								wumpusRow = row;
-								wumpusCol = col;
-								break;
-							}
+					case 1: { // Generates Wumpus
+						if (wumpusPlaced) {
+							continue;
+						} else {
+							newBoard[row][col].wumpusHere = true;
+							wumpusPlaced = true;
+							wumpusRow = row;
+							wumpusCol = col;
+							break;
 						}
-						case 2: { // Generates Weapon
-							if (weaponPlaced) {
-								continue;
-							} else {
-								newBoard[row][col].weaponHere = true;
-								weaponPlaced = true;
-								break;
-							}
+					}
+					case 2: { // Generates Weapon
+						if (weaponPlaced) {
+							continue;
+						} else {
+							newBoard[row][col].weaponHere = true;
+							weaponPlaced = true;
+							break;
 						}
-						case 3: { // Generates Player
-							if (playerPlaced) {
-								continue;
-							} else {
-								newBoard[row][col].playerHere = true;
-								playerPlaced = true;
-								playerRow = row;
-								playerCol = col;
-								break;
-							}
+					}
+					case 3: { // Generates Player
+						if (playerPlaced) {
+							continue;
+						} else {
+							newBoard[row][col].playerHere = true;
+							playerPlaced = true;
+							playerRow = row;
+							playerCol = col;
+							break;
 						}
-						case 4: { // Generates Torch
-							if (torchesPlaced == numTorches) {
-								continue;
-							} else {
-								newBoard[row][col].torchHere = true;
-								torchesPlaced++;
-								break;
-							}
+					}
+					case 4: { // Generates Torch
+						if (torchesPlaced == numTorches) {
+							continue;
+						} else {
+							newBoard[row][col].torchHere = true;
+							torchesPlaced++;
+							break;
 						}
-						case 5: { // Generates Compass
-							if (compassPlaced) {
-								continue;
-							} else {
-								newBoard[row][col].compassHere = true;
-								compassPlaced = true;
-								break;
-							}
+					}
+					case 5: { // Generates Compass
+						if (compassPlaced) {
+							continue;
+						} else {
+							newBoard[row][col].compassHere = true;
+							compassPlaced = true;
+							break;
 						}
+					}
 					}
 					break;
 				}
@@ -137,7 +140,7 @@ abstract class FindTheWumpus {
 		}
 		return newBoard;
 	}
-	
+
 	static void menu() {
 		while (true) {
 			// Display User Options
@@ -161,64 +164,80 @@ abstract class FindTheWumpus {
 				userInput.next();
 				continue;
 			}
-			displayBoard();
 			switch (userResponse) {
-				case "1": {	// Display Board
-					displayBoard();
+			case "1": { // Display Board
+				displayBoard();
+				endTurn();
+				break;
+			}
+			case "2": { // Move
+				move();
+				endTurn();
+				break;
+			}
+			case "3": { // Use Compass
+				if (compassFound) {
+					useCompass();
 					endTurn();
 					break;
-				}
-				case "2": {	// Move
-					move();
-					endTurn();
-					break;
-				}
-				case "3": {	// Use Compass
-					if (compassFound) {
-						useCompass();
-						endTurn();
-						break;
-					} else {
-						System.out.println("You have not found the compass yet.");
-						continue;
-					}
-				}
-				case "4": {	// Attack Wumpus
-					if (torchesFound > 2) {
-						attackWumpus(5);
-						endTurn();
-						break;
-					} else {
-						System.out.println("You have not found enough torches yet.");
-						continue;
-					}
-				}
-				default: {
-					System.out.println("Enter one of the options.");
+				} else {
+					System.out.println("You have not found the compass yet.");
 					continue;
 				}
+			}
+			case "4": { // Attack Wumpus
+				if (torchesFound > 2) {
+					attackWumpus(5);
+					endTurn();
+					break;
+				} else {
+					System.out.println("You have not found enough torches yet.");
+					continue;
+				}
+			}
+			default: {
+				System.out.println("Enter one of the options.");
+				continue;
+			}
 			}
 			continue; // Breakpoint
 		}
 	}
-	
+
 	static void endTurn() {
-		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If player is on the same spot as the wumpus.
+		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) { // If player
+																	// is on the
+																	// same spot
+																	// as the
+																	// wumpus.
 			if (weaponFound) {
-				attackWumpus(80);	// 80% chance of winning if the player has the weapon.
+				attackWumpus(80); // 80% chance of winning if the player has the
+									// weapon.
 			} else {
-				attackWumpus(20);	// 20% chance of winning.
+				attackWumpus(20); // 20% chance of winning.
 			}
-		} else {	// If the player did not find the wumpus, it moves to a new random spot.
+		} else { // If the player did not find the wumpus, it moves to a new
+					// random spot.
 			gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
 			wumpusRow = random.nextInt(gameBoard.length + 1);
 			wumpusCol = random.nextInt(gameBoard[wumpusRow].length + 1);
 			gameBoard[wumpusRow][wumpusCol].wumpusHere = true;
-			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus moved to the same spot as the player.
+			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) { // If
+																		// the
+																		// wumpus
+																		// moved
+																		// to
+																		// the
+																		// same
+																		// spot
+																		// as
+																		// the
+																		// player.
 				if (weaponFound) {
-					attackWumpus(65);	// 65% chance of winning if the player has the weapon.
+					attackWumpus(65); // 65% chance of winning if the player has
+										// the weapon.
 				} else {
-					attackWumpus(5);	// 5% chance of winning.
+					attackWumpus(5); // 5% chance of winning.
 				}
 			}
 		}
@@ -227,8 +246,8 @@ abstract class FindTheWumpus {
 
 	// methods the menu will call
 	static void displayBoard() {
-		for (int row = 0 ; row < gameBoard.length ; row++) {
-			for (int col = 0 ; col < gameBoard[row].length ; col++) {
+		for (int row = 0; row < gameBoard.length; row++) {
+			for (int col = 0; col < gameBoard[row].length; col++) {
 				if (gameBoard[row][col].wumpusHere) {
 					System.out.print("W\t");
 				} else if (gameBoard[row][col].weaponHere) {
@@ -258,35 +277,35 @@ abstract class FindTheWumpus {
 				continue;
 			}
 			switch (userResponse) {
-				case "north": {
-					gameBoard[playerRow][playerCol].playerHere = false;
-					gameBoard[playerRow][--playerCol].playerHere = true;
-					endTurn();
-					break;
-				}
-				case "east": {
-					gameBoard[playerRow][playerCol].playerHere = false;
-					gameBoard[++playerRow][playerCol].playerHere = true;
-					endTurn();
-					break;
-				}
-				case "south": {
-					gameBoard[playerRow][playerCol].playerHere = false;
-					gameBoard[playerRow][++playerCol].playerHere = true;
-					endTurn();
-					break;
-				}
-				case "west": {
-					gameBoard[playerRow][playerCol].playerHere = false;
-					gameBoard[--playerRow][playerCol].playerHere = true;
-					endTurn();
-					break;
-				}
-				default: {
-					System.out.println("Error! Choose a direction you idiot.");
-					endTurn();
-					continue;
-				}
+			case "north": {
+				gameBoard[playerRow][playerCol].playerHere = false;
+				gameBoard[playerRow][--playerCol].playerHere = true;
+				endTurn();
+				break;
+			}
+			case "east": {
+				gameBoard[playerRow][playerCol].playerHere = false;
+				gameBoard[++playerRow][playerCol].playerHere = true;
+				endTurn();
+				break;
+			}
+			case "south": {
+				gameBoard[playerRow][playerCol].playerHere = false;
+				gameBoard[playerRow][++playerCol].playerHere = true;
+				endTurn();
+				break;
+			}
+			case "west": {
+				gameBoard[playerRow][playerCol].playerHere = false;
+				gameBoard[--playerRow][playerCol].playerHere = true;
+				endTurn();
+				break;
+			}
+			default: {
+				System.out.println("Error! Choose a direction you idiot.");
+				endTurn();
+				continue;
+			}
 			}
 			break;
 		}
@@ -294,18 +313,35 @@ abstract class FindTheWumpus {
 	}
 
 	static void useCompass() {
+
 		if (compassFound) {
-			System.out.println("What item would you like to search for?");
-			if(weaponFound == false){
-				System.out.println("(1) Weapon - FOUND");
-			}else if(weaponFound == true){
-				System.out.println("(1) Weapon");
+			//checks if you have found the item or not
+			while (true) {
+				System.out.println("What item would you like to search for?");
+				if (weaponFound == false) {
+					System.out.println("(1) Weapon - FOUND");
+				} else if (weaponFound == true) {
+					System.out.println("(1) Weapon");
+				}
+				if (torchesFound == 2) {
+					System.out.println("(2) Torches - FOUND");
+				} else if (torchesFound == 2) {
+					System.out.println("(2) Torches - 1 FOUND");
+				} else {
+					System.out.println("(2) Torches ");
+				}
+				try {
+					userResponse = userInput.next();
+				} catch (InputMismatchException e) {
+					System.out.println("Please enter a numerical response.");
+					break;
+				}
 			}
-			else if(torchesFound == 2){
-				System.out.println("(2) Torches - FOUND");
-			}
-			else if(torchesFound == 1){
-				System.out.println("(3) Torches - 1 Found");
+			//Yeah I'm learning
+			switch(userResponse){
+			case "1":
+				
+			case "2": 
 			}
 		} else {
 			System.out.println("You have not found the compass yet.");
@@ -314,12 +350,12 @@ abstract class FindTheWumpus {
 	}
 
 	static void attackWumpus(int oddsOfWinning) {
-		if (random.nextInt(100) < oddsOfWinning) {	// If the user wins,
+		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
 			System.out.println("You Beat The Wumpus!");
-		} else {	// If the user loses,
-			System.out.println("The Wumpus Ate Your Fingers!"); 
+		} else { // If the user loses,
+			System.out.println("The Wumpus Ate Your Fingers!");
 			System.exit(0);
 		}
 	}
-	
+
 }
