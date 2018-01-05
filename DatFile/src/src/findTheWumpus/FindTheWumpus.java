@@ -56,8 +56,6 @@ abstract class FindTheWumpus {
 	public static void main(String[] args) {
 		gameBoard = makeBoard(5, 5, 5);
 		menu();
-		// menu();
-		// endTurn();
 	}
 
 	/**
@@ -81,7 +79,7 @@ abstract class FindTheWumpus {
 		for (int row = 0 ; row < newBoard.length ; row++) {
 			for (int col = 0 ; col < newBoard[row].length ; col++) {
 				newBoard[row][col] = new GameTile(row, col);
-				do {
+				while (true) {
 					switch (random.nextInt(6) + 1) {
 						case 1: { // Generates Wumpus
 							if (wumpusPlaced) {
@@ -134,14 +132,14 @@ abstract class FindTheWumpus {
 						}
 					}
 					break;
-				} while (true);
+				}
 			}
 		}
 		return newBoard;
 	}
 	
 	static void menu() {
-		do {
+		while (true) {
 			// Display User Options
 			System.out.println("Your Turn\n(1) Display Board\n(2) Move");
 			if (compassFound) {
@@ -200,9 +198,9 @@ abstract class FindTheWumpus {
 				}
 			}
 			continue; // Breakpoint
-		} while (true);
+		}
 	}
-
+	
 	static void endTurn() {
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If player is on the same spot as the wumpus.
 			if (weaponFound) {
@@ -223,6 +221,7 @@ abstract class FindTheWumpus {
 				}
 			}
 		}
+		//
 	}
 
 	// methods the menu will call
@@ -234,7 +233,7 @@ abstract class FindTheWumpus {
 				} else if (gameBoard[row][col].weaponHere) {
 					System.out.print("A\t");
 				} else if (gameBoard[row][col].playerHere) {
-					System.out.print("M\t");
+					System.out.print("P\t");
 				} else if (gameBoard[row][col].torchHere) {
 					System.out.print("T\t");
 				} else if (gameBoard[row][col].compassHere) {
@@ -248,7 +247,7 @@ abstract class FindTheWumpus {
 	}
 
 	static void move() {
-		do {
+		while (true) {
 			System.out.print("Which direction do you want to move?\nNorth, East, South, or West?: ");
 			try {
 				userResponse = userInput.next();
@@ -289,7 +288,7 @@ abstract class FindTheWumpus {
 				}
 			}
 			break;
-		} while (true);
+		}
 		endTurn();
 	}
 
@@ -306,7 +305,8 @@ abstract class FindTheWumpus {
 		if (random.nextInt(100) < oddsOfWinning) {	// If the user wins,
 			System.out.println("You Beat The Wumpus!");
 		} else {	// If the user loses,
-			System.out.println("The Wumpus Ate Your Fingers!");
+			System.out.println("The Wumpus Ate Your Fingers!"); 
+			System.exit(0);
 		}
 	}
 	
