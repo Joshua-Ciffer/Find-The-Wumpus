@@ -5,56 +5,57 @@ import java.util.InputMismatchException;
 
 /**
  * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-it-takes-for-multiple-threads-to-finish-executin
+ * <br><br>
+ * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
- * @version 01/02/2018
+ * @version 01/05/2018
  */
-public class FindTheWumpus {
+abstract class FindTheWumpus {
 
 	/**
 	 * Board that contains all of the characters and items for the game.
 	 */
-	private static GameTile[][] gameBoard;
+	static GameTile[][] gameBoard;
 	
 	/**
 	 * Used to generate random numbers to determine spawn points, probabilities, etc.
 	 */
-	private static Random random = new Random();
+	static Random random = new Random();
 	
 	/**
 	 * Accepts user input for menus.
 	 */
-	private static Scanner userInput = new Scanner(System.in);
+	static Scanner userInput = new Scanner(System.in);
 	
 	/**
 	 * Stores the user's response to a menu prompt.
 	 */
-	private static String userResponse;
+	static String userResponse;
 	
 	/**
 	 * The coordinate location of the player on the game board.
 	 */
-	private static int playerRow, playerCol;
+	static int playerRow, playerCol;
 	
 	/**
 	 * The coordinate location of the wumpus on the game board.
 	 */
-	private static int wumpusRow, wumpusCol;
+	static int wumpusRow, wumpusCol;
 	
 	/**
 	 * The number of torches the player has found.
 	 */
-	private static int torchesFound;
+	static int torchesFound;
 	
 	/**
 	 * Keeps track of whether or not the player has picked up any items.
 	 */
-	private static boolean weaponFound, compassFound;
+	static boolean weaponFound, compassFound;
 
-	// also made the methods, but didn't fill it in
 	public static void main(String[] args) {
-		gameBoard = makeBoard(5, 50, 5);
-
+		gameBoard = makeBoard(5, 5, 5);
+		menu();
 		// menu();
 		// endTurn();
 	}
@@ -73,13 +74,13 @@ public class FindTheWumpus {
 	 * @return Returns a new GameTile[][] with the specified size, number of
 	 *         torches, and with all of the game items spawned.
 	 */
-	public static GameTile[][] makeBoard(int numRows, int numCols, int numTorches) {
+	static GameTile[][] makeBoard(int numRows, int numCols, int numTorches) {
 		GameTile[][] newBoard = new GameTile[numRows][numCols];
 		boolean wumpusPlaced = false, weaponPlaced = false, playerPlaced = false, compassPlaced = false;
 		int torchesPlaced = 0;
 		for (int row = 0 ; row < newBoard.length ; row++) {
 			for (int col = 0 ; col < newBoard[row].length ; col++) {
-				newBoard[row][col] = new GameTile(col, row);
+				newBoard[row][col] = new GameTile(row, col);
 				do {
 					switch (random.nextInt(6) + 1) {
 						case 1: { // Generates Wumpus
@@ -138,8 +139,8 @@ public class FindTheWumpus {
 		}
 		return newBoard;
 	}
-//Damn dude, you and your damn switch statements
-	public static void menu() {
+	
+	static void menu() {
 		do {
 			// Display User Options
 			System.out.println("Your Turn\n(1) Display Board\n(2) Move");
@@ -185,7 +186,7 @@ public class FindTheWumpus {
 				}
 				case "4": {	// Attack Wumpus
 					if (torchesFound > 2) {
-						attackWumpus();
+						attackWumpus(5);
 						endTurn();
 						break;
 					} else {
@@ -202,7 +203,7 @@ public class FindTheWumpus {
 		} while (true);
 	}
 
-	public static void endTurn() {
+	static void endTurn() {
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If player is on the same spot as the wumpus.
 			if (weaponFound) {
 				attackWumpus(80);	// 80% chance of winning if the player has the weapon.
@@ -225,7 +226,7 @@ public class FindTheWumpus {
 	}
 
 	// methods the menu will call
-	public static void displayBoard() {
+	static void displayBoard() {
 		for (int row = 0 ; row < gameBoard.length ; row++) {
 			for (int col = 0 ; col < gameBoard[row].length ; col++) {
 				if (gameBoard[row][col].wumpusHere) {
@@ -246,7 +247,7 @@ public class FindTheWumpus {
 		}
 	}
 
-	public static void move() {
+	static void move() {
 		do {
 			System.out.print("Which direction do you want to move?\nNorth, East, South, or West?: ");
 			try {
@@ -292,11 +293,21 @@ public class FindTheWumpus {
 		endTurn();
 	}
 
-	public static void useCompass() {
-		// fill in the blank
+	static void useCompass() {
+		if (compassFound) {
+			
+		} else {
+			System.out.println("You have not found the compass yet.");
+			endTurn();
+		}
 	}
 
-	public static void attackWumpus(int oddsOfWinning) {
-		// fill in the blank
+	static void attackWumpus(int oddsOfWinning) {
+		if (random.nextInt(100) < oddsOfWinning) {	// If the user wins,
+			System.out.println("You Beat The Wumpus!");
+		} else {	// If the user loses,
+			System.out.println("The Wumpus Ate Your Fingers!");
+		}
 	}
+	
 }
