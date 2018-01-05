@@ -161,6 +161,7 @@ abstract class FindTheWumpus {
 				userInput.next();
 				continue;
 			}
+			displayBoard();
 			switch (userResponse) {
 				case "1": {	// Display Board
 					displayBoard();
@@ -294,7 +295,12 @@ abstract class FindTheWumpus {
 
 	static void useCompass() {
 		if (compassFound) {
-			
+			System.out.println("What item would you like to search for?");
+			if(weaponFound == false){
+				continue;
+			}else{
+				System.out.println("");
+			}
 		} else {
 			System.out.println("You have not found the compass yet.");
 			endTurn();
