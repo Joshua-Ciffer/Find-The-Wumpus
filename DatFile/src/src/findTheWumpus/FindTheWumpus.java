@@ -48,7 +48,7 @@ import java.util.InputMismatchException;
  * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
- * @version 01/07/2018
+ * @version 01/08/2018
  */
 abstract class FindTheWumpus {
 
@@ -380,7 +380,8 @@ abstract class FindTheWumpus {
 			gameBoard[playerRow][playerCol].torchHere = false;
 			System.out.println("You found a torch!");
 		}
-		
+		// Sets explored tiles.
+		gameBoard[playerRow][playerCol].explored = true;
 	}
 
 	static void displayBoard() {
@@ -406,7 +407,34 @@ abstract class FindTheWumpus {
 		}
 		endTurn();
 	}
-
+	
+	/**
+	 * This method prints out the entire contents of the game board.
+	 */
+	static void printBoard() {
+		for (int row = 0; row < gameBoard.length; row++) {
+			for (int col = 0; col < gameBoard[row].length; col++) {
+				if (gameBoard[row][col].playerHere) {
+					System.out.print("P\t");	// Player at this tile.
+				} else if (gameBoard[row][col].wumpusHere) {
+					System.out.print("W\t");	// Wumpus at this tile.
+				} else if (gameBoard[row][col].weaponHere) {
+					System.out.print("A\t");	// Weapon at this tile.
+				} else if (gameBoard[row][col].compassHere) {
+					System.out.print("C\t");	// Compass at this tile.
+				} else if (gameBoard[row][col].torchHere) {
+					System.out.print("T\t");	// Torch at this tile.
+				} else if (gameBoard[row][col].explored) {
+					System.out.print("O\t");	// Explored tile.
+				} else {
+					System.out.print("X\t");	// Unexplored tile.
+				}
+			}
+			System.out.print("\n");
+		}
+		endTurn();
+	}
+	
 	/**
 	 * This method prompts the user to move in a North, East, South, or West
 	 * direction. The user can choose to cancel and go back to the menu. If the user
