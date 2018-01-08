@@ -479,7 +479,14 @@ abstract class FindTheWumpus {
 	}
 
 	static void useCompass() {
-
+		int itemCol;
+		/*
+		 * Location of the Item's Row
+		 */
+		int itemRow;
+		/*
+		 * Location of the Item's Column
+		 */
 		if (compassFound) {
 			// checks if you have found the item or not
 			while (true) {
@@ -496,6 +503,7 @@ abstract class FindTheWumpus {
 				} else {
 					System.out.println("(2) Torches ");
 				}
+				System.out.println("3");
 				try {
 					userResponse = userInput.next();
 				} catch (InputMismatchException e) {
@@ -506,8 +514,44 @@ abstract class FindTheWumpus {
 			// Yeah I'm learning
 			switch (userResponse) {
 				case "1":
-
+					if(weaponFound==true){
+						System.out.println("You already found this item");
+					}else{
+						for(int row = 0; row < gameBoard.length; row++){
+							for(int col = 0; col < gameBoard[0].length; col++){
+								if(gameBoard[row][col].torchHere == true){
+									itemRow = gameBoard.length;
+									itemCol = gameBoard[col].length;
+									break;
+								}else{
+									continue;
+								}
+							}
+						}
+					}
 				case "2":
+					if(weaponFound==true){
+						System.out.println("You already found this item");
+					}else{
+						for(int row = 0; row < gameBoard.length; row++){
+							for(int col = 0; col < gameBoard[0].length; col++){
+								if(gameBoard[row][col].weaponHere == true){
+									itemRow = gameBoard.length;
+									itemCol = gameBoard[col].length;
+									break;
+								}else{
+									continue;
+								}
+							}
+						}
+						
+					}
+				case "3":
+					itemCol = wumpusCol;
+					itemRow = wumpusRow;
+					
+				default:
+					System.out.println("Incorrect response");
 			}
 		} else {
 			System.out.println("You have not found the compass yet.");
