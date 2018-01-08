@@ -415,8 +415,9 @@ abstract class FindTheWumpus {
 	 * and endTurn() is called.
 	 */
 	static void move() {
+		System.out.print("\n");
 		while (true) {
-			System.out.print("\nDo you want to move to the North, East, South, West, or Cancel?: ");
+			System.out.print("Do you want to move to the North, East, South, West, or Cancel?: ");
 			try {
 				userResponse = userInput.next();
 			} catch (InputMismatchException e) {
@@ -473,7 +474,7 @@ abstract class FindTheWumpus {
 						break;
 					}
 				}
-				case "north east": {
+				case "northeast": {
 					if (((playerRow - 1) < 0) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {
 						System.out.println("\nUh oh, it looks like you can't move to the North East");
 						continue;
@@ -485,7 +486,7 @@ abstract class FindTheWumpus {
 						break;
 					}
 				}
-				case "north west": {
+				case "northwest": {
 					if (((playerRow - 1) < 0) || ((playerCol - 1) < 0)) {
 						System.out.println("\nUh oh, it looks like you can't move to the North West.\n");
 						continue;
@@ -497,16 +498,29 @@ abstract class FindTheWumpus {
 						break;
 					}
 				}
-				case "south east": {
+				case "southeast": {
 					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {
 						System.out.println("\nUh oh, it looks like you can't move to the South East.\n");
 						continue;
 					} else {
-						gameBoard
+						gameBoard[playerRow][playerCol].playerHere = false;
+						gameBoard[++playerRow][++playerCol].playerHere = true;
+						System.out.println("\nYou moved to the South East.\n");
+						endTurn();
+						break;
 					}
 				}
-				case "south west": {
-					
+				case "southwest": {
+					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol - 1) < 0)) {
+						System.out.println("\nUh oh, it looks like you can't move to the South West.\n");
+						continue;
+					} else {
+						gameBoard[playerRow][playerCol].playerHere = false;
+						gameBoard[++playerRow][--playerCol].playerHere = true;
+						System.out.println("\nYou moved to the South West.\n");
+						endTurn();
+						break;
+					}
 				}
 				case "cancel": {
 					System.out.print("\n");
