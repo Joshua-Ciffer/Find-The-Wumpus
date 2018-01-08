@@ -82,9 +82,9 @@ abstract class FindTheWumpus {
 	static int wumpusRow, wumpusCol;
 
 	/**
-	 * Keeps track of whether or not the player has picked up any items.
+	 * The coordinate location of the weapon on the game board.
 	 */
-	static boolean weaponFound, compassFound;
+	static int weaponRow, weaponCol;
 	
 	/**
 	 * Keeps track of whether or not the player has picked up any items.
