@@ -87,6 +87,11 @@ abstract class FindTheWumpus {
 	static boolean weaponFound, compassFound;
 	
 	/**
+	 * Keeps track of whether or not the player has picked up any items.
+	 */
+	static boolean weaponFound, compassFound;
+	
+	/**
 	 * Keeps track of how many torches the player has found.
 	 */
 	static int torchesFound;
@@ -332,26 +337,42 @@ abstract class FindTheWumpus {
 	}
 
 	static void endTurn() {
-		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {
+		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the player bumped into the wumpus.
 			if (weaponFound) {
-				attackWumpus(80);
+				attackWumpus(80);	// 80% chance of winning.
 			} else {
-				attackWumpus(20); // 20% chance of winning.
+				attackWumpus(20); 	// 20% chance of winning.
 			}
-		} else { // If the player did not find the wumpus, it moves to a new random spot.
+		} else { 	// If the player did not bump into the wumpus, it moves to a new random spot.
 			gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
 			wumpusRow = random.nextInt(gameBoard.length);
 			wumpusCol = random.nextInt(gameBoard[wumpusRow].length);
 			gameBoard[wumpusRow][wumpusCol].wumpusHere = true;
-			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {
+			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus bumped into the player.
 				if (weaponFound) {
-					attackWumpus(65);
+					attackWumpus(65);	// 65% chance of winning.
 				} else {
-					attackWumpus(5); // 5% chance of winning.
+					attackWumpus(5); 	// 5% chance of winning.
 				}
 			}
 		}
-		//
+		// Player picks up any items on their tile.
+		if (gameBoard[playerRow][playerCol].weaponHere) {
+			weaponFound = true;
+			gameBoard[playerRow][playerCol].weaponHere = false;
+			System.out.println("You found the weapon!");
+		}
+		if (gameBoard[playerRow][playerCol].compassHere) {
+			compassFound = true;
+			gameBoard[playerRow][playerCol].compassHere = false;
+			System.out.println("You found the compass!");
+		}
+		if (gameBoard[playerRow][playerCol].torchHere) {
+			torchesFound++;
+			gameBoard[playerRow][playerCol].torchHere = false;
+			System.out.println("You found a torch!");
+		}
+		
 	}
 
 	static void displayBoard() {
@@ -501,6 +522,10 @@ abstract class FindTheWumpus {
 			System.out.println("The Wumpus Ate Your Fingers!");
 			System.exit(0);
 		}
+	}
+	
+	static double findDistance(int row, int col) {
+		return Math.sqrt(Math.pow((playerRow - row), 2) + Math.pow((playerCol - col), 2));
 	}
 
 }
