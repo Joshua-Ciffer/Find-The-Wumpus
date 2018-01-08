@@ -262,7 +262,6 @@ abstract class FindTheWumpus {
 						}
 						case 5: {	// Spawns torch.
 							if (torchesPlaced == numTorches) {
-								FindTheWumpus.numTorches = numTorches;
 								continue;
 							} else {
 								newBoard[row][col].torchHere = true;
@@ -473,6 +472,41 @@ abstract class FindTheWumpus {
 						endTurn();
 						break;
 					}
+				}
+				case "north east": {
+					if (((playerRow - 1) < 0) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {
+						System.out.println("\nUh oh, it looks like you can't move to the North East");
+						continue;
+					} else {
+						gameBoard[playerRow][playerCol].playerHere = false;
+						gameBoard[--playerRow][++playerCol].playerHere = true;
+						System.out.println("\nYou moved to the North East.\n");
+						endTurn();
+						break;
+					}
+				}
+				case "north west": {
+					if (((playerRow - 1) < 0) || ((playerCol - 1) < 0)) {
+						System.out.println("\nUh oh, it looks like you can't move to the North West.\n");
+						continue;
+					} else {
+						gameBoard[playerRow][playerCol].playerHere = false;
+						gameBoard[--playerRow][--playerCol].playerHere = true;
+						System.out.println("\nYou moved to the North West.\n");
+						endTurn();
+						break;
+					}
+				}
+				case "south east": {
+					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {
+						System.out.println("\nUh oh, it looks like you can't move to the South East.\n");
+						continue;
+					} else {
+						gameBoard
+					}
+				}
+				case "south west": {
+					
 				}
 				case "cancel": {
 					System.out.print("\n");
