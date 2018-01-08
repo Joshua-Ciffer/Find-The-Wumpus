@@ -4,7 +4,9 @@ import java.util.Scanner;
 import java.util.InputMismatchException;
 
 /*
- * -------------------------------------Change Log-------------------------------------
+ *-------------------------------------Change Log-------------------------------------
+ *-----01/08/2018----
+ *-Put some new stuff into useCompass (BW).
  * -----01/07/2018----
  * -Added ability to have different difficulties for game boards (JC).
  * -Fixed bugs with makeBoard() and removed bias from the random spawning of items (JC).
@@ -95,6 +97,12 @@ abstract class FindTheWumpus {
 	 * Keeps track of how many torches the player has found.
 	 */
 	static int torchesFound;
+	
+	/**
+	 *Keeps track of how many torches are in the game.
+	 */
+	
+	static int numTorches;
 
 	/**
 	 * The main entry point of the program.  A board with a specified difficulty is
@@ -254,6 +262,7 @@ abstract class FindTheWumpus {
 						}
 						case 5: {	// Spawns torch.
 							if (torchesPlaced == numTorches) {
+								FindTheWumpus.numTorches = numTorches;
 								continue;
 							} else {
 								newBoard[row][col].torchHere = true;
@@ -479,14 +488,25 @@ abstract class FindTheWumpus {
 	}
 
 	static void useCompass() {
-		int itemCol;
-		/*
-		 * Location of the Item's Row
-		 */
-		int itemRow;
+		
 		/*
 		 * Location of the Item's Column
 		 */
+		int itemCol;
+		/**
+		 * Location of the Item's Row
+		 */
+		int itemRow;
+		/**
+		 * itemCol - playerCol = DistCol
+		 */
+		int DistCol;
+		/**
+		 * Location itemRow - playerRow = DistCol
+		 */
+		int DistRow;
+		
+		
 		if (compassFound) {
 			// checks if you have found the item or not
 			while (true) {
@@ -496,10 +516,10 @@ abstract class FindTheWumpus {
 				} else if (weaponFound == true) {
 					System.out.println("(1) Weapon");
 				}
-				if (torchesFound == 2) {
+				if (torchesFound == numTorches) {
 					System.out.println("(2) Torches - FOUND");
-				} else if (torchesFound == 2) {
-					System.out.println("(2) Torches - 1 FOUND");
+				} else if (torchesFound < numTorches) {
+					System.out.println("(2) Torches ." + torchesFound + " FOUND");
 				} else {
 					System.out.println("(2) Torches ");
 				}
@@ -528,6 +548,7 @@ abstract class FindTheWumpus {
 								}
 							}
 						}
+						
 					}
 				case "2":
 					if(weaponFound==true){
