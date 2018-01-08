@@ -89,8 +89,15 @@ abstract class FindTheWumpus {
 			if (newBoard[row][col] == null) {	// If this spot does not have a tile placed, create one.
 				newBoard[row][col] = new GameTile(row, col);
 				while (true) {
-					switch (random.nextInt(5)) {
-						case 0: {	// Spawns player.
+					switch (random.nextInt(6)) {
+						case 0: {	// Spawns empty tile.
+							if (!(playerPlaced && wumpusPlaced && weaponPlaced && compassPlaced && (torchesPlaced == numTorches))) {
+								continue;	// If the other items haven't been spawned yet, continue and spawn the items before spawning empty tiles.
+							} else {
+								break;	// Spawns no item on this tile.
+							}
+						}
+						case 1: {	// Spawns player.
 							if (playerPlaced) {
 								continue;
 							} else {
@@ -101,7 +108,7 @@ abstract class FindTheWumpus {
 								break;
 							}
 						}
-						case 1: {	// Spawns wumpus.
+						case 2: {	// Spawns wumpus.
 							if (wumpusPlaced) {
 								continue;
 							} else {
@@ -112,7 +119,7 @@ abstract class FindTheWumpus {
 								break;
 							}
 						}
-						case 2: {	// Spawns weapon.
+						case 3: {	// Spawns weapon.
 							if (weaponPlaced) {
 								continue;
 							} else {
@@ -121,7 +128,7 @@ abstract class FindTheWumpus {
 								break;
 							}
 						}		
-						case 3: {	// Spawns compass.
+						case 4: {	// Spawns compass.
 							if (compassPlaced) {
 								continue;
 							} else {
@@ -130,7 +137,7 @@ abstract class FindTheWumpus {
 								break;
 							}
 						}
-						case 4: {	// Spawns torch.
+						case 5: {	// Spawns torch.
 							if (torchesPlaced == numTorches) {
 								continue;
 							} else {
@@ -140,13 +147,11 @@ abstract class FindTheWumpus {
 							}
 						}
 					}
-					System.out.println("F");
 					break;
 				}
 			} else {	// If a tile was already placed at this spot, do nothing.
 				gameTilesPlaced--;	// If a tile was already placed here, ignore it and don't count this tile a second time. Do nothing and move on.
 			}	
-			System.out.println("e");
 		}
 		return newBoard;
 	}
