@@ -1,29 +1,56 @@
-
 package src.findTheWumpus;
-
 import java.util.Random;
 import java.util.Scanner;
 import java.util.InputMismatchException;
 
-/**
- * -----Notes-----
- * -Completely finished and debugged move()
+/*
+ * -------------------------------------Change Log-------------------------------------
+ * -----01/07/2018----
+ * -Fixed bugs with makeBoard() and removed bias from the random spawning of items (JC).
+ * -----01/06/2018-----
+ * -Completely finished and debugged move() (JC).
  * -Rewrote makeBoard() so that items are generated completely randomly, but then
  * I was tweaking the code for it and now it gets stuck in an infinite loop.  I'll
- * fix that as soon as I can.
+ * fix that as soon as I can (JC).
+ * -----01/05/2018-----
+ * -BUG: There is a bias to where items are spawned with makeBoard() with the random().
+ * -Did some stuff to endTurn() (BW).
+ * -Started attackWumpus() (JC).
+ * -Tried to fix move() cause I fucked up (JC).
+ * -Started writing useCompass() (BW).
+ * -----01/03/2018-----
+ * -BUG: When you chose a direction with move(), it moves you in a different direction
+ * than you chose.
+ * -Started writing endTurn(), move(), and javadoc for state variables (JC).
+ * -Started writing menu(), and displayBoard() (BW).
+ * -----01/02/2018-----
+ * -Started writing makeBoard() (JC).
+ * -Wrote out templates for all necessary methods and state variables (BW).
  * 
- * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-
- * it-takes-for-multiple-threads-to-finish-executin <br>
- * <br>
+ * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-it-takes-for-multiple-threads-to-finish-executin 
+ */
+/**
+ * This class contains the methods to create a game board using GameTile objects
+ * and have the player be able to move around the board, find items, and fight
+ * the wumpus.  The game board is created by initializing GameTile objects on a 
+ * rectangular board in a random order, and then randomly spawning an item on those
+ * game tiles.  The player has options to move across the board to different tiles,
+ * display the gameboard so they can see what items are near them, use the compass
+ * to give them directions on where to find a certain item, or they can choose to
+ * attack the wumpus if they are close enough.  After choosing an action, the player's
+ * turn ends, and the wumpus moves to a different location.  If the wumpus and the
+ * player ever end up on the same game tile, the two will attack each other and the
+ * player will be given a certain probability of winning.
+ * <br><br>
  * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
- * @version 01/05/2018
+ * @version 01/07/2018
  */
 abstract class FindTheWumpus {
 
 	/**
-	 * Board that contains all of the characters and items for the game.
+	 * Rectangular board that contains all of the characters and items for the game.
 	 */
 	static GameTile[][] gameBoard;
 
@@ -34,7 +61,7 @@ abstract class FindTheWumpus {
 	static Random random = new Random();
 
 	/**
-	 * Accepts user input for menus.
+	 * Accepts user input for menu prompts.
 	 */
 	static Scanner userInput = new Scanner(System.in);
 
@@ -54,18 +81,100 @@ abstract class FindTheWumpus {
 	static int wumpusRow, wumpusCol;
 
 	/**
-	 * The number of torches the player has found.
+	 * Keeps track of whether or not the player has picked up any items.
+	 */
+	static boolean weaponFound, compassFound;
+	
+	/**
+	 * Keeps track of how many torches the player has found.
 	 */
 	static int torchesFound;
 
 	/**
-	 * Keeps track of whether or not the player has picked up any items.
+	 * The main entry point of the program.  A board with a specified difficulty is
+	 * created and then the menu is run until the game is finished.
+	 * 
+	 * @param args - Any command line arguments.
 	 */
-	static boolean weaponFound, compassFound;
-
 	public static void main(String[] args) {
-		gameBoard = makeBoard(5, 5, 2);
-		displayBoard();
+//		gameBoard = makeBoard(5, 5, 2);
+//		displayBoard();
+		while (true) {
+			System.out.print("--------Find The Wumpus Game--------\nBy Brian Williams, & Joshua Ciffer" + 
+					"\n (1) Easy - 5x5 Board, 3 Torches\n (2) Medium - 10x10 Board, 2 Torches" +
+					"\n (3) Hard - 15x15 Board, 1 Torch\n (4) Custom Difficulty\n (5) Quit\nEnter an option: ");
+			try {
+				userResponse = userInput.next();
+			} catch (InputMismatchException e) {
+				System.out.println("\nPlease enter one of the given options.\n");
+				userInput.next();	// Clears the scanner.
+				continue;
+			}
+			switch (userResponse.toLowerCase()) {
+				case "1": {		// Easy.
+					gameBoard = makeBoard(5, 5, 3);
+					menu();
+					break;
+				}
+				case "2": {		// Medium.
+					gameBoard = makeBoard(10, 10, 2);
+					menu();
+					break;
+				}
+				case "3": {		// Hard.
+					gameBoard = makeBoard(15, 15, 1);
+					menu();
+					break;
+				}
+				case "4": {		// Custom.
+					int rows, cols, torches;
+					while (true) {
+						try {
+							System.out.print("How tall will the game board be?: ");
+							rows = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative array size.
+						} catch (InputMismatchException e) {
+							System.out.println("\nPlease enter how tall the game board will be.\n");
+							userInput.next();	// Clears the scanner.
+							continue;
+						}
+						while (true) {
+							try {
+								System.out.print("How wide will the game board be?: ");
+								cols = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative array size.
+							} catch (InputMismatchException e) {
+								System.out.println("\nPlease enter how wide the game board will be.\n");
+								userInput.next();	// Clears the scanner.
+								continue;
+							}
+							while (true) {
+								try {
+									System.out.print("How many torches will there be?: ");
+									torches = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative amount of torches.
+								} catch (InputMismatchException e) {
+									System.out.println("\nPlease enter how many torches there will be.\n");
+									userInput.next();	// Clears the scanner.
+									continue;
+								}
+								break;
+							}
+							break;
+						}
+						break;
+					}
+					gameBoard = makeBoard(rows, cols, torches);
+					menu();
+					break;
+				}
+				case "5": {		// Quit.
+					System.exit(0);
+					break;
+				}
+				default: {
+					System.out.println("\nPlease enter one of the given options.\n");
+					continue;
+				}
+			}
+		}
 	}
 
 	/**
@@ -84,12 +193,12 @@ abstract class FindTheWumpus {
 		boolean playerPlaced = false, wumpusPlaced = false, weaponPlaced = false, compassPlaced = false;
 		int torchesPlaced = 0;
 		for (int gameTilesPlaced = 0; gameTilesPlaced < (numRows * numCols); gameTilesPlaced++) {
-			int row = random.nextInt(newBoard.length);
-			int col = random.nextInt(newBoard[row].length);
+			int row = random.nextInt(newBoard.length);	// The coordinates of the next tiles to be created are generated randomly, and the game board
+			int col = random.nextInt(newBoard[row].length);// is filled in a random order.
 			if (newBoard[row][col] == null) {	// If this spot does not have a tile placed, create one.
-				newBoard[row][col] = new GameTile(row, col);
+				newBoard[row][col] = new GameTile();
 				while (true) {
-					switch (random.nextInt(6)) {
+					switch (random.nextInt(6)) {	// Randomly picks the item to spawn on the game tile.
 						case 0: {	// Spawns empty tile.
 							if (!(playerPlaced && wumpusPlaced && weaponPlaced && compassPlaced && (torchesPlaced == numTorches))) {
 								continue;	// If the other items haven't been spawned yet, continue and spawn the items before spawning empty tiles.
@@ -150,9 +259,9 @@ abstract class FindTheWumpus {
 					break;
 				}
 			} else {	// If a tile was already placed at this spot, do nothing.
-				gameTilesPlaced--;	// If a tile was already placed here, ignore it and don't count this tile a second time. Do nothing and move on.
-			}	
-		}
+				gameTilesPlaced--;	// The loop incrementer is decremented if a tile was already spawned at these coordinates.
+			}                    // This is so the loop actually spawns the correct amount of tiles and makes sure it isn't
+		}                        // counting the same tile more than once.
 		return newBoard;
 	}
 
