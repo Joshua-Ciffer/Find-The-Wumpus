@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 /*
  * -------------------------------------Change Log-------------------------------------
  * -----01/07/2018----
+ * -Added ability to have different difficulties for game boards (JC).
  * -Fixed bugs with makeBoard() and removed bias from the random spawning of items (JC).
  * -----01/06/2018-----
  * -Completely finished and debugged move() (JC).
