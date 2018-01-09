@@ -660,7 +660,7 @@ abstract class FindTheWumpus {
 		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
 			System.out.println("You Beat The Wumpus!");
 		} else { // If the user loses,
-			System.out.println("The Wumpus Ate Your Fingers!");
+			System.out.println("The Wumpus Atez Your Fingers!");
 			System.exit(0);
 		}
 	}
