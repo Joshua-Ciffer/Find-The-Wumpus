@@ -5,9 +5,10 @@ import java.util.InputMismatchException;
 
 /*
  *-------------------------------------Change Log-------------------------------------
- *-----01/08/2018----
- *-Put some new stuff into useCompass (BW).
- * -----01/07/2018----
+ * -----01/08/2018-----
+ * -Put some new stuff into useCompass (BW).
+ * -IDR what I did, but I did some stuff (JC).
+ * -----01/07/2018-----
  * -Added ability to have different difficulties for game boards (JC).
  * -Fixed bugs with makeBoard() and removed bias from the random spawning of items (JC).
  * -----01/06/2018-----
@@ -101,7 +102,6 @@ abstract class FindTheWumpus {
 	/**
 	 *Keeps track of how many torches are in the game.
 	 */
-	
 	static int numTorches;
 
 	/**
@@ -345,6 +345,23 @@ abstract class FindTheWumpus {
 	}
 
 	static void endTurn() {
+		// Player picks up any items on their tile.
+		if (gameBoard[playerRow][playerCol].weaponHere) {
+			weaponFound = true;
+			gameBoard[playerRow][playerCol].weaponHere = false;
+			System.out.println("You found the weapon!");
+		}
+		if (gameBoard[playerRow][playerCol].compassHere) {
+			compassFound = true;
+			gameBoard[playerRow][playerCol].compassHere = false;
+			System.out.println("You found the compass!");
+		}
+		if (gameBoard[playerRow][playerCol].torchHere) {
+			torchesFound++;
+			gameBoard[playerRow][playerCol].torchHere = false;
+			System.out.println("You found a torch!");
+		}
+		// Checks to see if user will fight the wumpus.
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the player bumped into the wumpus.
 			if (weaponFound) {
 				attackWumpus(80);	// 80% chance of winning.
@@ -364,24 +381,34 @@ abstract class FindTheWumpus {
 				}
 			}
 		}
-		// Player picks up any items on their tile.
-		if (gameBoard[playerRow][playerCol].weaponHere) {
-			weaponFound = true;
-			gameBoard[playerRow][playerCol].weaponHere = false;
-			System.out.println("You found the weapon!");
-		}
-		if (gameBoard[playerRow][playerCol].compassHere) {
-			compassFound = true;
-			gameBoard[playerRow][playerCol].compassHere = false;
-			System.out.println("You found the compass!");
-		}
-		if (gameBoard[playerRow][playerCol].torchHere) {
-			torchesFound++;
-			gameBoard[playerRow][playerCol].torchHere = false;
-			System.out.println("You found a torch!");
-		}
 		// Sets explored tiles.
-		gameBoard[playerRow][playerCol].explored = true;
+		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
+		for (int i = 1; i <= numTorches; i++) {
+			if ((playerRow - i) > 0) {
+				gameBoard[playerRow - i][playerCol].explored = true;	// Tile to the North of the player.
+			} 
+			if ((playerCol + i) < (gameBoard[playerRow].length - 1)) {
+				gameBoard[playerRow][playerCol + i].explored = true;	// Tile to the East of the player.
+			}
+			if ((playerRow + i) < (gameBoard.length - 1)) {
+				gameBoard[playerRow + i][playerCol].explored = true;	// Tile to the South of the player.
+			}
+			if ((playerCol - i) > 0) {
+				gameBoard[playerRow][playerCol - i].explored = true;	// TIle to the West of the player.
+			}
+			if (((playerRow - i) > 0) && ((playerCol + i) < (gameBoard[playerRow].length - 1))) {
+				gameBoard[playerRow - i][playerCol + i].explored = true;	// Tile to the Northeast of the player.
+			}
+			if (((playerRow + i) < (gameBoard.length - 1)) && ((playerCol + i) < (gameBoard[playerRow].length - 1))) {
+				gameBoard[playerRow + i][playerCol + i].explored = true;	// Tile to the Southeast of the player.
+			}
+			if (((playerRow + i) < (gameBoard.length - 1)) && ((playerCol - i) > 0)) {
+				gameBoard[playerRow + i][playerCol - i].explored = true;	// Tile to the Southwest of the player.
+			}
+			if (((playerRow - i) > 0) && ((playerCol - i) > 0)) {
+				gameBoard[playerRow - i][playerCol - i].explored = true;	// Tile to the Northwest of the player.
+			}
+		}
 	}
 
 	static void displayBoard() {
