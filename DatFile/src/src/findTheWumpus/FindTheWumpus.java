@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 
 /*
  *-------------------------------------Change Log-------------------------------------
+ *-DONT TOUCH useCompass(), IT DIDN'T UPDATE
  * -----01/09/2018-----
  * -Worked on making tiles near the player explored when they move, have torches, etc (JC).
  * -Got useCompass() working (BW).
