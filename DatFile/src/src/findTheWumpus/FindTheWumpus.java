@@ -5,7 +5,9 @@ import java.util.InputMismatchException;
 
 /*
  *-------------------------------------Change Log-------------------------------------
- *-DONT TOUCH useCompass(), IT DIDN'T UPDATE
+ **-----01/10/2018----
+ *-BUG: Wumpus doesn't move one space, it teleports to a random location
+ *-Completed useCompass (BW)
  * -----01/09/2018-----
  * -Worked on making tiles near the player explored when they move, have torches, etc (JC).
  * -Got useCompass() working (BW).
@@ -611,99 +613,174 @@ abstract class FindTheWumpus {
 	}
 
 	static void useCompass() {
-		
+
 		/*
 		 * Location of the Item's Column
 		 */
-		int itemCol;
+		int itemCol = 0;
 		/**
 		 * Location of the Item's Row
 		 */
-		int itemRow;
+		int itemRow = 0;
 		/**
 		 * itemCol - playerCol = DistCol
 		 */
-		int DistCol;
+		int distCol = 0;
 		/**
 		 * Location itemRow - playerRow = DistCol
 		 */
-		int DistRow;
-		
-		
+		int distRow = 0;
+
 		if (compassFound) {
 			// checks if you have found the item or not
 			while (true) {
 				System.out.println("What item would you like to search for?");
-				if (weaponFound == false) {
+				if (weaponFound) {
 					System.out.println("(1) Weapon - FOUND");
-				} else if (weaponFound == true) {
+				} else {
 					System.out.println("(1) Weapon");
 				}
 				if (torchesFound == numTorches) {
 					System.out.println("(2) Torches - FOUND");
-				} else if (torchesFound < numTorches) {
+				} else if (torchesFound > 0 && torchesFound < numTorches) {
 					System.out.println("(2) Torches ." + torchesFound + " FOUND");
 				} else {
 					System.out.println("(2) Torches ");
 				}
-				System.out.println("3");
+				System.out.println("(3) Wumpus");
+
 				try {
 					userResponse = userInput.next();
 				} catch (InputMismatchException e) {
 					System.out.println("Please enter a numerical response.");
-					break;
+					userInput.next();
+					continue;
 				}
+				break;
 			}
-			// Yeah I'm learning
+			// Case 1 + 3 competed
 			switch (userResponse) {
-				case "1": {
-					if(weaponFound==true){
-						System.out.println("You already found this item");
-					}else{
-						for(int row = 0; row < gameBoard.length; row++){
-							for(int col = 0; col < gameBoard[0].length; col++){
-								if(gameBoard[row][col].torchHere == true){
-									itemRow = gameBoard.length;
-									itemCol = gameBoard[col].length;
-									break;
-								}else{
-									continue;
-								}
+			case "1":
+				if (weaponFound == true) {
+					System.out.println("You already found this item");
+				} else {
+					for (int row = 0; row < gameBoard.length; row++) {
+						for (int col = 0; col < gameBoard[0].length; col++) {
+							if (gameBoard[row][col].weaponHere == true) {
+								itemRow = row;
+								itemCol = col;
+								break;
+							} else {
+								continue;
 							}
 						}
-						
+					}
+					distRow = itemRow - playerRow;
+					distCol = playerCol - itemCol;
+					if (distCol > 0) {
+						if (distRow < 0) {
+							System.out.println("Northwest");
+						} else if (distRow > 0) {
+							System.out.println("Southwest");
+						} else {
+							System.out.println("East");
+						}
+
+					} else if (distCol < 0) {
+						if (distRow > 0) {
+							System.out.println("Northeast");
+						} else if (distRow < 0) {
+							System.out.println("Southeast");
+						} else {
+							System.out.println("West");
+						}
+
+					} else {
+						if (distRow < 0) {
+							System.out.println("North");
+						} else {
+							System.out.println("South");
+						}
 					}
 				}
-				case "2": {
-					if(weaponFound==true){
-						System.out.println("You already found this item");
-					}else{
-						for(int row = 0; row < gameBoard.length; row++){
-							for(int col = 0; col < gameBoard[0].length; col++){
-								if(gameBoard[row][col].weaponHere == true){
-									itemRow = gameBoard.length;
-									itemCol = gameBoard[col].length;
-									break;
-								}else{
-									continue;
-								}
+				break;
+			case "2":
+				if (torchesFound == numTorches) {
+					System.out.println("You already found all of thesse itmes");
+				} else {
+					for (int row = 0; row < gameBoard.length; row++) {
+						for (int col = 0; col < gameBoard[0].length; col++) {
+							if (gameBoard[row][col].torchHere == true) {
+								itemRow = Math.min(itemRow, row);
+								itemCol = Math.min(itemCol, col);
+								break;
+							} else {
+								continue;
 							}
 						}
-						
+					}
+					distRow = itemRow - playerRow;
+					distCol = playerCol - itemCol;
+					if (distCol > 0) {
+						if (distRow < 0) {
+							System.out.println("Northwest");
+						} else if (distRow > 0) {
+							System.out.println("Southwest");
+						} else {
+							System.out.println("East");
+						}
+
+					} else if (distCol < 0) {
+						if (distRow > 0) {
+							System.out.println("Northeast");
+						} else if (distRow < 0) {
+							System.out.println("Southeast");
+						} else {
+							System.out.println("West");
+						}
 					}
 				}
-				case "3": {
-					itemCol = wumpusCol;
-					itemRow = wumpusRow;
+				break;
+			case "3":
+				itemCol = wumpusCol;
+				itemRow = wumpusRow;
+
+				distRow = itemRow - playerRow;
+				distCol = playerCol - itemCol;
+				if (distCol > 0) {
+					if (distRow < 0) {
+						System.out.println("Northwest");
+					} else if (distRow > 0) {
+						System.out.println("Southwest");
+					} else {
+						System.out.println("East");
+					}
+
+				} else if (distCol < 0) {
+					if (distRow > 0) {
+						System.out.println("Northeast");
+					} else if (distRow < 0) {
+						System.out.println("Southeast");
+					} else {
+						System.out.println("West");
+					}
+
+				} else {
+					if (distRow < 0) {
+						System.out.println("North");
+					} else {
+						System.out.println("South");
+					}
 				}
-				default: {
-					System.out.println("Incorrect response");
-				}
+				break;
+			default:
+				System.out.println("Incorrect response");
 			}
 		} else {
-			System.out.println("You have not found the compass yet.");
+			System.out.println("You dirty hacker");
 			endTurn();
 		}
+		endTurn();
 	}
 
 	static void attackWumpus(int oddsOfWinning) {
