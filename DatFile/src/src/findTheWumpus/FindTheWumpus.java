@@ -6,6 +6,10 @@ import java.util.InputMismatchException;
 /*
  *-------------------------------------Change Log-------------------------------------
  * -----01/11/2018-----
+ * -Fix bug with random wumpus movement.
+ * -DEBUG: Check endTurn() where it sets explored tiles in a radius around the player.
+ * -Fixed menu() when the user would complete the game (JC).
+ * -Did some housekeeping stuff, annotating, etc (JC).
  * -Fixed directions for useCompass() (BW).
  * -----01/10/2018-----
  * -BUG: Wumpus doesn't move one space, it teleport to a random location
@@ -108,14 +112,14 @@ abstract class FindTheWumpus {
 	static int torchesFound;
 	
 	/**
-	 * Keeps track of how many torches are in the game.
+	 * Keeps track of how many torches are on the game board.
 	 */
 	static int numTorches;
 	
 	/**
-	 * This variable gets set
+	 * True if the user fights the wumpus and the game ends.
 	 */
-	static boolean playerBeatWumpus;
+	static boolean gameOver;
 
 	/**
 	 * The main entry point of the program.  A board with a specified difficulty is
@@ -137,17 +141,17 @@ abstract class FindTheWumpus {
 			}
 			switch (userResponse.toLowerCase()) {
 				case "1": {		// Easy.
-					gameBoard = makeBoard(5, 5, 3);
+					gameBoard = makeBoard(5, 5, 3);		// 5x5 board, 3 torches.
 					menu();
 					break;
 				}
 				case "2": {		// Medium.
-					gameBoard = makeBoard(10, 10, 2);
+					gameBoard = makeBoard(10, 10, 2);	// 10x10 board, 2 torches.
 					menu();
 					break;
 				}
 				case "3": {		// Hard.
-					gameBoard = makeBoard(15, 15, 1);
+					gameBoard = makeBoard(15, 15, 1);	// 15x15 board, 1 torch.
 					menu();
 					break;
 				}
@@ -229,7 +233,7 @@ abstract class FindTheWumpus {
 							if (!(playerPlaced && wumpusPlaced && weaponPlaced && compassPlaced && (torchesPlaced == numTorches))) {
 								continue;	// If the other items haven't been spawned yet, continue and spawn the items before spawning empty tiles.
 							} else {
-								break;	// Spawns no item on this tile.
+								break;	// Leaves game tile with no items on it.
 							}
 						}
 						case 1: {	// Spawns player.
@@ -260,6 +264,8 @@ abstract class FindTheWumpus {
 							} else {
 								newBoard[row][col].weaponHere = true;
 								weaponPlaced = true;
+								weaponRow = row;
+								weaponCol = col;
 								break;
 							}
 						}		
@@ -291,68 +297,79 @@ abstract class FindTheWumpus {
 		return newBoard;
 	}
 
+	/**
+	 * This method displays the options available to the player and takes in their input
+	 * to carry out various methods of the game.
+	 */
 	static void menu() {
 		while (true) {
-			// Display User Options
-			System.out.println("Your Turn\n(1) Display Board\n(2) Move");
+			System.out.println("Your Turn:\n (1) Display Board\n (2) Move");
 			if (compassFound) {
-				System.out.println("(3) Use Compass");
+				System.out.println(" (3) Use Compass");
 			} else {
-				System.out.println("(3) LOCKED.");
+				System.out.println(" (3) LOCKED");
 			}
 			if (torchesFound > 2) {
-				System.out.println("(4) Attack Wumpus");
+				System.out.println(" (4) Attack Wumpus");
 			} else {
-				System.out.println("(4) LOCKED.");
+				System.out.println(" (4) LOCKED");
 			}
-			System.out.print("(5) Exit\nEnter an Option: ");
-			// Selects appropriate choice
+			System.out.print(" (5) Quit\nEnter an Option: ");
 			try {
 				userResponse = userInput.next();
 			} catch (InputMismatchException e) {
-				System.out.println("Please choose one of the available numerical responses!");
-				userInput.next();
+				System.out.println("\nPlease choose one of the given options.\n");
+				userInput.next();	// Clears the scanner.
 				continue;
 			}
-			switch (userResponse) {
-				case "1": { // Display Board
+			switch (userResponse.toLowerCase()) {
+				case "1": { // Display Board.
 					displayBoard();
 					break;
 				}
-				case "2": { // Move
+				case "2": { // Move.
 					move();
 					break;
 				}
-				case "3": { // Use Compass
+				case "3": { // Use Compass.
 					if (compassFound) {
 						useCompass();
 						break;
 					} else {
-						System.out.println("You have not found the compass yet.");
+						System.out.println("\nThis option is locked until you find the compass.\n");
 						continue;
 					}
 				}
-				case "4": { // Attack Wumpus
+				case "4": { // Attack Wumpus.
 					if (torchesFound > 2) {
 						attackWumpus(5);
 						break;
 					} else {
-						System.out.println("You have not found enough torches yet.");
+						System.out.println("\nThis option is locked until you find enough torches.\n");
 						continue;
 					}
 				}
-				case "5": { // Exit
-					System.exit(0);
+				case "5": { // Quit.
+					gameOver = true;
+					break;
 				}
-				default: {
-					System.out.println("Enter one of the options.");
+				default: {	// Error.
+					System.out.println("\nEnter one of the given options.\n");
 					continue;
 				}
 			}
-			continue; // Breakpoint
+			if (gameOver) {
+				break;	// Goes back to main menu if game ends.
+			} else {
+				continue;	// Continues the game if it isn't over.
+			}
 		}
 	}
 
+	/**
+	 * This method updates positions, collects items, and has the wumpus move
+	 * to a new position after the end of the player's turn.
+	 */
 	static void endTurn() {
 		// Player picks up any items on their tile.
 		if (gameBoard[playerRow][playerCol].weaponHere) {
@@ -372,6 +389,7 @@ abstract class FindTheWumpus {
 		}
 		// Checks to see if user will fight the wumpus.
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the player bumped into the wumpus.
+			System.out.print("You bumped into the wumpus!");
 			if (weaponFound) {
 				attackWumpus(80);	// 80% chance of winning.
 			} else {
@@ -383,6 +401,7 @@ abstract class FindTheWumpus {
 			wumpusCol = random.nextInt(gameBoard[wumpusRow].length);
 			gameBoard[wumpusRow][wumpusCol].wumpusHere = true;
 			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus bumped into the player.
+				System.out.print("The wumpus bumped into you!");
 				if (weaponFound) {
 					attackWumpus(65);	// 65% chance of winning.
 				} else {
@@ -392,7 +411,7 @@ abstract class FindTheWumpus {
 		}
 		// Sets explored tiles.
 		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
-		for (int i = 1; i <= torchesFound; i++) {
+		for (int i = 1; i <= torchesFound; i++) {	// Tiles in the radius of the player depending on the number of torches they found.
 			if ((playerRow - i) > 0) {
 				gameBoard[playerRow - i][playerCol].explored = true;	// Tile to the North of the player.
 			} 
@@ -452,7 +471,7 @@ abstract class FindTheWumpus {
 	}
 	
 	/**
-	 * This method prints out the entire contents of the game board.
+	 * This method prints out the entire contents of the game board for debugging purposes.
 	 */
 	static void printBoard() {
 		for (int row = 0; row < gameBoard.length; row++) {
@@ -475,20 +494,20 @@ abstract class FindTheWumpus {
 			}
 			System.out.print("\n");
 		}
-		endTurn();
 	}
 	
 	/**
-	 * This method prompts the user to move in a North, East, South, or West
-	 * direction. The user can choose to cancel and go back to the menu. If the user
-	 * is at the edge of the board, they are prompted with a message telling them
-	 * that they can't move in that direction. Once the player moves, the turn ends
-	 * and endTurn() is called.
+	 * This method prompts the user to move in a North, East, South, West, Northeast,
+	 * Southeast, Southwest, or Northwest direction. The user can choose to cancel and 
+	 * go back to the menu. If the user is at the edge of the board, they are prompted 
+	 * with a message telling them that they can't move in that direction. Once the 
+	 * player moves, the turn ends and endTurn() is called.
 	 */
 	static void move() {
 		System.out.print("\n");
 		while (true) {
-			System.out.print("Do you want to move to the North, East, South, West, or Cancel?: ");
+			System.out.print("Do you want to move to the North, East, South, West,\n"
+					+ "Northeast, Southeast, Southwest, Northwest, or Cancel?: ");
 			try {
 				userResponse = userInput.next();
 			} catch (InputMismatchException e) {
@@ -498,7 +517,6 @@ abstract class FindTheWumpus {
 			}
 			switch (userResponse.toLowerCase()) {
 				case "north": {
-					gameBoard[playerRow][playerCol].explored = true;
 					if ((playerRow - 1) < 0) {	// If the player would move off of the top of the board,
 						System.out.println("\nUh oh, it looks like you can't move to the North. Try a different direction.");
 						continue;
@@ -511,7 +529,6 @@ abstract class FindTheWumpus {
 					}
 				}
 				case "east": {
-					gameBoard[playerRow][playerCol].explored = true;
 					if ((playerCol + 1) > (gameBoard[playerRow].length - 1)) {	// If the user would move off of the right of the board,
 						System.out.println("\nUh oh, it looks like you can't move to the East. Try a different direction.");
 						continue;
@@ -524,7 +541,6 @@ abstract class FindTheWumpus {
 					}
 				}
 				case "south": {
-					gameBoard[playerRow][playerCol].explored = true;
 					if ((playerRow + 1) > (gameBoard.length - 1)) {	// If the user would move off of the bottom of the board,
 						System.out.println("\nUh oh, it looks like you can't move to the South. Try a different direction.");
 						continue;
@@ -537,7 +553,6 @@ abstract class FindTheWumpus {
 					}
 				}
 				case "west": {
-					gameBoard[playerRow][playerCol].explored = true;
 					if ((playerCol - 1) < 0) {	// If the user would move off of the left of the board,
 						System.out.println("\nUh oh, it looks like you can't move to the West. Try a different direction.");
 						continue;
@@ -550,52 +565,48 @@ abstract class FindTheWumpus {
 					}
 				}
 				case "northeast": {
-					gameBoard[playerRow][playerCol].explored = true;
-					if (((playerRow - 1) < 0) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {
+					if (((playerRow - 1) < 0) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {	// If the user would move off the board,
 						System.out.println("\nUh oh, it looks like you can't move to the North East");
 						continue;
 					} else {
 						gameBoard[playerRow][playerCol].playerHere = false;
-						gameBoard[--playerRow][++playerCol].playerHere = true;
+						gameBoard[--playerRow][++playerCol].playerHere = true;	// Moves player diagonally up, right.
 						System.out.println("\nYou moved to the North East.\n");
 						endTurn();
 						break;
 					}
 				}
 				case "northwest": {
-					gameBoard[playerRow][playerCol].explored = true;
-					if (((playerRow - 1) < 0) || ((playerCol - 1) < 0)) {
+					if (((playerRow - 1) < 0) || ((playerCol - 1) < 0)) {	// If the user would move off the board,
 						System.out.println("\nUh oh, it looks like you can't move to the North West.\n");
 						continue;
 					} else {
 						gameBoard[playerRow][playerCol].playerHere = false;
-						gameBoard[--playerRow][--playerCol].playerHere = true;
+						gameBoard[--playerRow][--playerCol].playerHere = true;	// Moves player diagonally up, left.
 						System.out.println("\nYou moved to the North West.\n");
 						endTurn();
 						break;
 					}
 				}
 				case "southeast": {
-					gameBoard[playerRow][playerCol].explored = true;
-					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {
+					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {	// If the user would move off the board,
 						System.out.println("\nUh oh, it looks like you can't move to the South East.\n");
 						continue;
 					} else {
 						gameBoard[playerRow][playerCol].playerHere = false;
-						gameBoard[++playerRow][++playerCol].playerHere = true;
+						gameBoard[++playerRow][++playerCol].playerHere = true;	// Moves player diagonally down, right.
 						System.out.println("\nYou moved to the South East.\n");
 						endTurn();
 						break;
 					}
 				}
 				case "southwest": {
-					gameBoard[playerRow][playerCol].explored = true;
-					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol - 1) < 0)) {
+					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol - 1) < 0)) {	// If the user would move off of the board,
 						System.out.println("\nUh oh, it looks like you can't move to the South West.\n");
 						continue;
 					} else {
 						gameBoard[playerRow][playerCol].playerHere = false;
-						gameBoard[++playerRow][--playerCol].playerHere = true;
+						gameBoard[++playerRow][--playerCol].playerHere = true;	// Moves player diagonally down, left.
 						System.out.println("\nYou moved to the South West.\n");
 						endTurn();
 						break;
@@ -799,7 +810,7 @@ abstract class FindTheWumpus {
 	 * game.
 	 * 
 	 * @param oddsOfWinning - The perctentage chance the player has of winning.
-	 * @return True - If the user has beat the wumpus, false if the user has lost.
+	 * @return True if the user has beat the wumpus, false if the user has lost.
 	 */
 	static boolean attackWumpus(int oddsOfWinning) {
 		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
