@@ -881,15 +881,14 @@ abstract class FindTheWumpus {
 	 * game.
 	 * 
 	 * @param oddsOfWinning - The perctentage chance the player has of winning.
-	 * @return True if the user has beat the wumpus, false if the user has lost.
 	 */
-	static boolean attackWumpus(int oddsOfWinning) {
+	static void attackWumpus(int oddsOfWinning) {
 		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
-			System.out.println("You Beat The Wumpus!");
+			System.out.println(" You Beat The Wumpus!\n");
 		} else { // If the user loses,
-			System.out.println("The Wumpus Ate Your Fingers!");
+			System.out.println(" The Wumpus Ate Your Fingers!\n");
 		}
-		return true;
+		gameOver = true;
 	}
 	
 	/**
