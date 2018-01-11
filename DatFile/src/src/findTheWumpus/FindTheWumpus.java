@@ -304,6 +304,7 @@ abstract class FindTheWumpus {
 	 */
 	static void menu() {
 		while (true) {
+			printBoard();
 			System.out.println("Your Turn:\n (1) Display Board\n (2) Move");
 			if (compassFound) {
 				System.out.println(" (3) Use Compass");
@@ -735,7 +736,7 @@ abstract class FindTheWumpus {
 				if (torchesFound == numTorches) {
 					System.out.println("(2) Torches - FOUND");
 				} else if (torchesFound > 0 && torchesFound < numTorches) {
-					System.out.println("(2) Torches ." + torchesFound + " FOUND");
+					System.out.println("(2) Torches " + torchesFound + " FOUND");
 				} else {
 					System.out.println("(2) Torches ");
 				}
