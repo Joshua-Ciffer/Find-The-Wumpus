@@ -576,18 +576,6 @@ abstract class FindTheWumpus {
 						break;
 					}
 				}
-				case "northwest": {
-					if (((playerRow - 1) < 0) || ((playerCol - 1) < 0)) {	// If the user would move off the board,
-						System.out.println("\nUh oh, it looks like you can't move to the North West.\n");
-						continue;
-					} else {
-						gameBoard[playerRow][playerCol].playerHere = false;
-						gameBoard[--playerRow][--playerCol].playerHere = true;	// Moves player diagonally up, left.
-						System.out.println("\nYou moved to the North West.\n");
-						endTurn();
-						break;
-					}
-				}
 				case "southeast": {
 					if (((playerRow + 1) > (gameBoard.length - 1)) || ((playerCol + 1) > (gameBoard[playerRow].length - 1))) {	// If the user would move off the board,
 						System.out.println("\nUh oh, it looks like you can't move to the South East.\n");
@@ -608,6 +596,18 @@ abstract class FindTheWumpus {
 						gameBoard[playerRow][playerCol].playerHere = false;
 						gameBoard[++playerRow][--playerCol].playerHere = true;	// Moves player diagonally down, left.
 						System.out.println("\nYou moved to the South West.\n");
+						endTurn();
+						break;
+					}
+				}
+				case "northwest": {
+					if (((playerRow - 1) < 0) || ((playerCol - 1) < 0)) {	// If the user would move off the board,
+						System.out.println("\nUh oh, it looks like you can't move to the North West.\n");
+						continue;
+					} else {
+						gameBoard[playerRow][playerCol].playerHere = false;
+						gameBoard[--playerRow][--playerCol].playerHere = true;	// Moves player diagonally up, left.
+						System.out.println("\nYou moved to the North West.\n");
 						endTurn();
 						break;
 					}
@@ -665,7 +665,6 @@ abstract class FindTheWumpus {
 					System.out.println("(2) Torches ");
 				}
 				System.out.println("(3) Wumpus");
-
 				try {
 					userResponse = userInput.next();
 				} catch (InputMismatchException e) {
@@ -677,21 +676,94 @@ abstract class FindTheWumpus {
 			}
 			// Case 1 + 3 competed
 			switch (userResponse) {
-			case "1":
-				if (weaponFound == true) {
-					System.out.println("You already found this item");
-				} else {
-					for (int row = 0; row < gameBoard.length; row++) {
-						for (int col = 0; col < gameBoard[0].length; col++) {
-							if (gameBoard[row][col].weaponHere == true) {
-								itemRow = row;
-								itemCol = col;
-								break;
+				case "1": {
+					if (weaponFound) {
+						System.out.println("You already found this item");
+					} else {
+						for (int row = 0; row < gameBoard.length; row++) {
+							for (int col = 0; col < gameBoard[0].length; col++) {
+								if (gameBoard[row][col].weaponHere == true) {
+									itemRow = row;
+									itemCol = col;
+									break;
+								} else {
+									continue;
+								}
+							}
+						}
+						distRow = itemRow - playerRow;
+						distCol = playerCol - itemCol;
+						if (distCol > 0) {
+							if (distRow < 0) {
+								System.out.println("Northwest");
+							} else if (distRow > 0) {
+								System.out.println("Southwest");
+							} else {	
+								System.out.println("East");
+							}
+						} else if (distCol < 0) {
+							if (distRow > 0) {
+								System.out.println("Northeast");
+							} else if (distRow < 0) {
+								System.out.println("Southeast");
 							} else {
-								continue;
+								System.out.println("West");
+							}
+						} else {
+							if (distRow < 0) {
+								System.out.println("North");
+							} else {
+								System.out.println("South");
 							}
 						}
 					}
+					break;
+				}
+				case "2": {
+					if (torchesFound == numTorches) {
+						System.out.println("You already found all of thesse itmes");
+					} else {
+						for (int row = 0; row < gameBoard.length; row++) {
+							for (int col = 0; col < gameBoard[row].length; col++) {
+								if (gameBoard[row][col].torchHere == true) {
+									if(distance > (int)findDistance(row, col)){
+										distance =(int)findDistance(row,col);
+										itemRow = row;
+										itemCol = col;
+									} else {
+										continue;
+									}
+									break;
+								} else {
+									continue;
+								}
+							}
+						}
+						distRow = itemRow - playerRow;
+						distCol = playerCol - itemCol;
+						if (distCol > 0) {
+							if (distRow < 0) {
+								System.out.println("Northwest");
+							} else if (distRow > 0) {
+								System.out.println("Southwest");
+							} else {
+								System.out.println("East");
+							}
+						} else if (distCol < 0) {
+							if (distRow > 0) {
+								System.out.println("Northeast");
+							} else if (distRow < 0) {
+								System.out.println("Southeast");
+							} else {
+								System.out.println("West");
+							}
+						}
+					}
+					break;
+				}
+				case "3": {
+					itemCol = wumpusCol;
+					itemRow = wumpusRow;
 					distRow = itemRow - playerRow;
 					distCol = playerCol - itemCol;
 					if (distCol > 0) {
@@ -702,7 +774,6 @@ abstract class FindTheWumpus {
 						} else {
 							System.out.println("East");
 						}
-
 					} else if (distCol < 0) {
 						if (distRow > 0) {
 							System.out.println("Northeast");
@@ -711,7 +782,6 @@ abstract class FindTheWumpus {
 						} else {
 							System.out.println("West");
 						}
-
 					} else {
 						if (distRow < 0) {
 							System.out.println("North");
@@ -719,87 +789,13 @@ abstract class FindTheWumpus {
 							System.out.println("South");
 						}
 					}
+					break;
 				}
-				break;
-			case "2":
-				if (torchesFound == numTorches) {
-					System.out.println("You already found all of thesse itmes");
-				} else {
-					for (int row = 0; row < gameBoard.length; row++) {
-						for (int col = 0; col < gameBoard[row].length; col++) {
-							if (gameBoard[row][col].torchHere == true) {
-								if(distance > (int)findDistance(row, col)){
-									distance =(int)findDistance(row,col);
-									itemRow = row;
-									itemCol = col;
-								}else{
-									continue;
-								}
-								break;
-							} else {
-								continue;
-							}
-						}
-					}
-					distRow = itemRow - playerRow;
-					distCol = playerCol - itemCol;
-					if (distCol > 0) {
-						if (distRow < 0) {
-							System.out.println("Northwest");
-						} else if (distRow > 0) {
-							System.out.println("Southwest");
-						} else {
-							System.out.println("East");
-						}
-
-					} else if (distCol < 0) {
-						if (distRow > 0) {
-							System.out.println("Northeast");
-						} else if (distRow < 0) {
-							System.out.println("Southeast");
-						} else {
-							System.out.println("West");
-						}
-					}
+				default:
+					System.out.println("Incorrect response");
 				}
-				break;
-			case "3":
-				itemCol = wumpusCol;
-				itemRow = wumpusRow;
-
-				distRow = itemRow - playerRow;
-				distCol = playerCol - itemCol;
-				if (distCol > 0) {
-					if (distRow < 0) {
-						System.out.println("Northwest");
-					} else if (distRow > 0) {
-						System.out.println("Southwest");
-					} else {
-						System.out.println("East");
-					}
-
-				} else if (distCol < 0) {
-					if (distRow > 0) {
-						System.out.println("Northeast");
-					} else if (distRow < 0) {
-						System.out.println("Southeast");
-					} else {
-						System.out.println("West");
-					}
-
-				} else {
-					if (distRow < 0) {
-						System.out.println("North");
-					} else {
-						System.out.println("South");
-					}
-				}
-				break;
-			default:
-				System.out.println("Incorrect response");
-			}
 		} else {
-			System.out.println("You dirty hacker");
+			System.out.println("\nYou haven't found the compass yet!");
 		}
 		endTurn();
 	}
