@@ -5,9 +5,11 @@ import java.util.InputMismatchException;
 
 /*
  *-------------------------------------Change Log-------------------------------------
- **-----01/10/2018----
- *-BUG: Wumpus doesn't move one space, it teleports to a random location
- *-Completed useCompass (BW)
+ * -----01/11/2018-----
+ * -Fixed directions for useCompass() (BW).
+ * -----01/10/2018-----
+ * -BUG: Wumpus doesn't move one space, it teleport to a random location
+ * -Completed useCompass (BW)
  * -----01/09/2018-----
  * -Worked on making tiles near the player explored when they move, have torches, etc (JC).
  * -Got useCompass() working (BW).
@@ -55,7 +57,7 @@ import java.util.InputMismatchException;
  * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
- * @version 01/09/2018
+ * @version 01/11/2018
  */
 abstract class FindTheWumpus {
 
@@ -106,9 +108,14 @@ abstract class FindTheWumpus {
 	static int torchesFound;
 	
 	/**
-	 *Keeps track of how many torches are in the game.
+	 * Keeps track of how many torches are in the game.
 	 */
 	static int numTorches;
+	
+	/**
+	 * This variable gets set
+	 */
+	static boolean playerBeatWumpus;
 
 	/**
 	 * The main entry point of the program.  A board with a specified difficulty is
@@ -117,8 +124,6 @@ abstract class FindTheWumpus {
 	 * @param args - Any command line arguments.
 	 */
 	public static void main(String[] args) {
-//		gameBoard = makeBoard(5, 5, 2);
-//		displayBoard();
 		while (true) {
 			System.out.print("--------Find The Wumpus Game--------\nBy Brian Williams, & Joshua Ciffer" + 
 					"\n (1) Easy - 5x5 Board, 3 Torches\n (2) Medium - 10x10 Board, 2 Torches" +
@@ -312,7 +317,6 @@ abstract class FindTheWumpus {
 			switch (userResponse) {
 				case "1": { // Display Board
 					displayBoard();
-					endTurn();
 					break;
 				}
 				case "2": { // Move
@@ -322,7 +326,6 @@ abstract class FindTheWumpus {
 				case "3": { // Use Compass
 					if (compassFound) {
 						useCompass();
-						endTurn();
 						break;
 					} else {
 						System.out.println("You have not found the compass yet.");
@@ -332,7 +335,6 @@ abstract class FindTheWumpus {
 				case "4": { // Attack Wumpus
 					if (torchesFound > 2) {
 						attackWumpus(5);
-						endTurn();
 						break;
 					} else {
 						System.out.println("You have not found enough torches yet.");
@@ -713,7 +715,7 @@ abstract class FindTheWumpus {
 					System.out.println("You already found all of thesse itmes");
 				} else {
 					for (int row = 0; row < gameBoard.length; row++) {
-						for (int col = 0; col < gameBoard[0].length; col++) {
+						for (int col = 0; col < gameBoard[row].length; col++) {
 							if (gameBoard[row][col].torchHere == true) {
 								if(distance > (int)findDistance(row, col)){
 									distance =(int)findDistance(row,col);
@@ -787,20 +789,32 @@ abstract class FindTheWumpus {
 			}
 		} else {
 			System.out.println("You dirty hacker");
-			endTurn();
 		}
 		endTurn();
 	}
 
-	static void attackWumpus(int oddsOfWinning) {
+	/**
+	 * This method randomly determines whether or not the user wins against the
+	 * wumpus by using a percentage that varies off of different variables in the
+	 * game.
+	 * 
+	 * @param oddsOfWinning - The perctentage chance the player has of winning.
+	 * @return True - If the user has beat the wumpus, false if the user has lost.
+	 */
+	static boolean attackWumpus(int oddsOfWinning) {
 		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
 			System.out.println("You Beat The Wumpus!");
+			return true;
 		} else { // If the user loses,
 			System.out.println("The Wumpus Ate Your Fingers!");
-			// end game
+			return false;
 		}
 	}
 	
+	/**
+	 * This method returns the distance of two game tiles on the board using the distance formula.
+	 * The equation used is sqrt((row1 - row2)^2 + (col1 - col2)^2)
+	 */
 	static double findDistance(int row, int col) {
 		return Math.sqrt(Math.pow((playerRow - row), 2) + Math.pow((playerCol - col), 2));
 	}
