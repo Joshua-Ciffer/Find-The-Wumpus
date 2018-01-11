@@ -241,6 +241,7 @@ abstract class FindTheWumpus {
 								continue;
 							} else {
 								newBoard[row][col].playerHere = true;
+								newBoard[row][col].explored = true;
 								playerPlaced = true;
 								playerRow = row;
 								playerCol = col;
@@ -396,10 +397,83 @@ abstract class FindTheWumpus {
 				attackWumpus(20); 	// 20% chance of winning.
 			}
 		} else { 	// If the player did not bump into the wumpus, it moves to a new random spot.
-			gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
-			wumpusRow = random.nextInt(gameBoard.length);
-			wumpusCol = random.nextInt(gameBoard[wumpusRow].length);
-			gameBoard[wumpusRow][wumpusCol].wumpusHere = true;
+			while (true) {
+				switch (random.nextInt(8)) {
+					case 0: {
+						if ((wumpusRow - 1) < 0) {	// If the wumpus would move off of the top of the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[--wumpusRow][wumpusCol].wumpusHere = true;	// Moves wumpus one row up.
+							break;
+						}
+					}
+					case 1: {
+						if ((wumpusCol + 1) > (gameBoard[wumpusRow].length - 1)) {	// If the wumpus would move off of the right of the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[wumpusRow][++wumpusCol].wumpusHere = true;	// Moves wumpus one column right.
+							break;
+						}
+					}
+					case 2: {
+						if ((wumpusRow + 1) > (gameBoard.length - 1)) {	// If the wumpus would move off of the bottom of the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[++wumpusRow][wumpusCol].wumpusHere = true;	// Moves wumpus one row down.
+							break;
+						}
+					}
+					case 3: {
+						if ((wumpusCol - 1) < 0) {	// If the wumpus would move off of the left of the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[wumpusRow][--wumpusCol].wumpusHere = true;	// Moves wumpus one column left.
+							break;
+						}
+					}
+					case 4: {
+						if (((wumpusRow - 1) < 0) || ((wumpusCol + 1) > (gameBoard[wumpusRow].length - 1))) {	// If the wumpus would move off the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[--wumpusRow][++wumpusCol].wumpusHere = true;	// Moves wumpus diagonally up, right.
+							break;
+						}
+					}
+					case 5: {
+						if (((wumpusRow + 1) > (gameBoard.length - 1)) || ((wumpusCol + 1) > (gameBoard[wumpusRow].length - 1))) {	// If the wumpus would move off the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[++wumpusRow][++wumpusCol].wumpusHere = true;	// Moves wumpus diagonally down, right.
+							break;
+						}
+					}
+					case 6: {
+						if (((wumpusRow + 1) > (gameBoard.length - 1)) || ((wumpusCol - 1) < 0)) {	// If the wumpus would move off of the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[++wumpusRow][--wumpusCol].wumpusHere = true;	// Moves wumpus diagonally down, left.
+							break;
+						}
+					}
+					case 7: {
+						if (((wumpusRow - 1) < 0) || ((wumpusCol - 1) < 0)) {	// If the wumpus would move off the board,
+							continue;
+						} else {
+							gameBoard[wumpusRow][wumpusCol].wumpusHere = false;
+							gameBoard[--wumpusRow][--wumpusCol].wumpusHere = true;	// Moves wumpus diagonally up, left.
+							break;
+						}
+					}
+				}
+				break;
+			}
 			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus bumped into the player.
 				System.out.print("The wumpus bumped into you!");
 				if (weaponFound) {
@@ -811,11 +885,10 @@ abstract class FindTheWumpus {
 	static boolean attackWumpus(int oddsOfWinning) {
 		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
 			System.out.println("You Beat The Wumpus!");
-			return true;
 		} else { // If the user loses,
 			System.out.println("The Wumpus Ate Your Fingers!");
-			return false;
 		}
+		return true;
 	}
 	
 	/**
