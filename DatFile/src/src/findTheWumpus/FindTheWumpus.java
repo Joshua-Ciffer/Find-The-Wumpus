@@ -360,6 +360,7 @@ abstract class FindTheWumpus {
 				}
 			}
 			if (gameOver) {
+				gameOver = false;	// Resets variable for next game.
 				break;	// Goes back to main menu if game ends.
 			} else {
 				continue;	// Continues the game if it isn't over.
