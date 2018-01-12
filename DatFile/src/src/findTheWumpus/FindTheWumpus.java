@@ -506,16 +506,16 @@ abstract class FindTheWumpus {
 		// Sets explored tiles.
 		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
 		for (int i = 1; i <= torchesFound; i++) {	// Tiles in the radius of the player depending on the number of torches they found.
-			if ((playerRow - i) > 0) {
+			if ((playerRow - i) >= 0) {
 				gameBoard[playerRow - i][playerCol].explored = true;	// Tile to the North of the player.
 			} 
-			if ((playerCol + i) < (gameBoard[playerRow].length - 1)) {
+			if ((playerCol + i) <= (gameBoard[playerRow].length - 1)) {
 				gameBoard[playerRow][playerCol + i].explored = true;	// Tile to the East of the player.
 			}
-			if ((playerRow + i) < (gameBoard.length - 1)) {
+			if ((playerRow + i) <= (gameBoard.length - 1)) {
 				gameBoard[playerRow + i][playerCol].explored = true;	// Tile to the South of the player.
 			}
-			if ((playerCol - i) > 0) {
+			if ((playerCol - i) >= 0) {
 				gameBoard[playerRow][playerCol - i].explored = true;	// Tile to the West of the player.
 			}
 			if (((playerRow - i) >= 0) && ((playerCol + i) <= (gameBoard[playerRow].length - 1))) {
@@ -790,9 +790,9 @@ abstract class FindTheWumpus {
 						distCol = playerCol - itemCol;
 						if (distCol > 0) {
 							if (distRow < 0) {
-								System.out.println("Northwest");
-							} else if (distRow > 0) {
 								System.out.println("Southwest");
+							} else if (distRow > 0) {
+								System.out.println("Northwest");
 							} else {	
 								System.out.println("West");
 							}
@@ -806,9 +806,9 @@ abstract class FindTheWumpus {
 							}
 						} else {
 							if (distRow < 0) {
-								System.out.println("North");
-							} else {
 								System.out.println("South");
+							} else {
+								System.out.println("North");
 							}
 						}
 					}
@@ -828,7 +828,6 @@ abstract class FindTheWumpus {
 									} else {
 										continue;
 									}
-									break;
 								} else {
 									continue;
 								}
@@ -841,7 +840,7 @@ abstract class FindTheWumpus {
 								System.out.println("Northwest");
 							} else if (distRow > 0) {
 								System.out.println("Southwest");
-							} else {
+							} else {	
 								System.out.println("West");
 							}
 						} else if (distCol < 0) {
@@ -851,6 +850,12 @@ abstract class FindTheWumpus {
 								System.out.println("Southeast");
 							} else {
 								System.out.println("East");
+							}
+						} else {
+							if (distRow < 0) {
+								System.out.println("South");
+							} else {
+								System.out.println("North");
 							}
 						}
 					}
@@ -866,7 +871,7 @@ abstract class FindTheWumpus {
 							System.out.println("Northwest");
 						} else if (distRow > 0) {
 							System.out.println("Southwest");
-						} else {
+						} else {	
 							System.out.println("West");
 						}
 					} else if (distCol < 0) {
@@ -879,9 +884,9 @@ abstract class FindTheWumpus {
 						}
 					} else {
 						if (distRow < 0) {
-							System.out.println("North");
-						} else {
 							System.out.println("South");
+						} else {
+							System.out.println("North");
 						}
 					}
 					break;
