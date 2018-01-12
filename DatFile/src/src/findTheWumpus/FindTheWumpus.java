@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 /*
  *-------------------------------------Change Log-------------------------------------
  * -----01/11/2018-----
+ * -Fixed random wumpus movement.
  * -Fix bug with random wumpus movement.
  * -DEBUG: Check endTurn() where it sets explored tiles in a radius around the player.
  * -Fixed menu() when the user would complete the game (JC).
@@ -303,6 +304,7 @@ abstract class FindTheWumpus {
 	 * to carry out various methods of the game.
 	 */
 	static void menu() {
+		System.out.print("\n");
 		while (true) {
 			System.out.println("Your Turn:\n (1) Display Board\n (2) Move");
 			if (compassFound) {
@@ -342,13 +344,25 @@ abstract class FindTheWumpus {
 					}
 				}
 				case "4": { // Attack Wumpus.
-					if (torchesFound > 2) {
-						attackWumpus(5);
-						break;
+					if ((torchesFound >= 2) && (findDistance(wumpusRow, wumpusCol) <= 2)) {
+						if (findDistance(wumpusRow, wumpusCol) == 2) {
+							if (weaponFound) {
+								attackWumpus(75);
+							} else {
+								attackWumpus(15);
+							}
+						} else if (findDistance(wumpusRow, wumpusCol) <= 1) {
+							if (weaponFound) {
+								attackWumpus(90);
+							} else {
+								attackWumpus(30);
+							}
+						}
 					} else {
 						System.out.println("\nThis option is locked until you find enough torches.\n");
 						continue;
 					}
+					break;
 				}
 				case "5": { // Quit.
 					gameOver = true;
@@ -377,17 +391,17 @@ abstract class FindTheWumpus {
 		if (gameBoard[playerRow][playerCol].weaponHere) {
 			weaponFound = true;
 			gameBoard[playerRow][playerCol].weaponHere = false;
-			System.out.println("You found the weapon!");
+			System.out.print("You found the weapon!");
 		}
 		if (gameBoard[playerRow][playerCol].compassHere) {
 			compassFound = true;
 			gameBoard[playerRow][playerCol].compassHere = false;
-			System.out.println("You found the compass!");
+			System.out.print("You found the compass!");
 		}
 		if (gameBoard[playerRow][playerCol].torchHere) {
 			torchesFound++;
 			gameBoard[playerRow][playerCol].torchHere = false;
-			System.out.println("You found a torch!");
+			System.out.print("You found a torch!");
 		}
 		// Checks to see if user will fight the wumpus.
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the player bumped into the wumpus.
@@ -484,6 +498,9 @@ abstract class FindTheWumpus {
 				}
 			}
 		}
+		if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {
+			System.out.print("You have found wumpus droppings. A wumpus must be near by.");
+		}
 		// Sets explored tiles.
 		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
 		for (int i = 1; i <= torchesFound; i++) {	// Tiles in the radius of the player depending on the number of torches they found.
@@ -512,6 +529,7 @@ abstract class FindTheWumpus {
 				gameBoard[playerRow - i][playerCol - i].explored = true;	// Tile to the Northwest of the player.
 			}
 		}
+		System.out.print("\n");
 	}
 
 	/**
@@ -894,9 +912,11 @@ abstract class FindTheWumpus {
 	/**
 	 * This method returns the distance of two game tiles on the board using the distance formula.
 	 * The equation used is sqrt((row1 - row2)^2 + (col1 - col2)^2)
+	 * 
+	 * @return Returns the distance between two game tiles.
 	 */
-	static double findDistance(int row, int col) {
-		return Math.sqrt(Math.pow((playerRow - row), 2) + Math.pow((playerCol - col), 2));
+	static int findDistance(int row, int col) {
+		return (int)(Math.sqrt(Math.pow((playerRow - row), 2) + Math.pow((playerCol - col), 2)));
 	}
 
 }
