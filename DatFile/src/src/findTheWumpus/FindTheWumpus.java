@@ -502,7 +502,7 @@ abstract class FindTheWumpus {
 			}
 		}
 		if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {
-			System.out.print("\nYou have found wumpus droppings. A wumpus must be near by.");
+			System.out.print("You have found wumpus droppings. A wumpus must be near by.");
 		}
 		// Sets explored tiles.
 		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
@@ -517,18 +517,18 @@ abstract class FindTheWumpus {
 				gameBoard[playerRow + i][playerCol].explored = true;	// Tile to the South of the player.
 			}
 			if ((playerCol - i) > 0) {
-				gameBoard[playerRow][playerCol - i].explored = true;	// TIle to the West of the player.
+				gameBoard[playerRow][playerCol - i].explored = true;	// Tile to the West of the player.
 			}
 			if (((playerRow - i) >= 0) && ((playerCol + i) <= (gameBoard[playerRow].length - 1))) {
 				gameBoard[playerRow - i][playerCol + i].explored = true;	// Tile to the Northeast of the player.
 			}
-			if (((playerRow + i) < (gameBoard.length - 1)) && ((playerCol + i) < (gameBoard[playerRow].length - 1))) {
+			if (((playerRow + i) <= (gameBoard.length - 1)) && ((playerCol + i) <= (gameBoard[playerRow].length - 1))) {
 				gameBoard[playerRow + i][playerCol + i].explored = true;	// Tile to the Southeast of the player.
 			}
-			if (((playerRow + i) < (gameBoard.length - 1)) && ((playerCol - i) > 0)) {
+			if (((playerRow + i) <= (gameBoard.length - 1)) && ((playerCol - i) >= 0)) {
 				gameBoard[playerRow + i][playerCol - i].explored = true;	// Tile to the Southwest of the player.
 			}
-			if (((playerRow - i) > 0) && ((playerCol - i) > 0)) {
+			if (((playerRow - i) >= 0) && ((playerCol - i) >= 0)) {
 				gameBoard[playerRow - i][playerCol - i].explored = true;	// Tile to the Northwest of the player.
 			}
 		}
