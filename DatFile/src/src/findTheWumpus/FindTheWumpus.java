@@ -2,7 +2,7 @@ package src.findTheWumpus;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.InputMismatchException;
-
+// fuck
 /*
  *-------------------------------------Change Log-------------------------------------
  * -----01/12/2018-----
