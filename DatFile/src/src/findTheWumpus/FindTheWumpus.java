@@ -5,6 +5,8 @@ import java.util.InputMismatchException;
 
 /*
  *-------------------------------------Change Log-------------------------------------
+ * -----01/12/2018-----
+ * 
  * -----01/11/2018-----
  * -Fixed random wumpus movement.
  * -Fix bug with random wumpus movement.
@@ -517,7 +519,7 @@ abstract class FindTheWumpus {
 			if ((playerCol - i) > 0) {
 				gameBoard[playerRow][playerCol - i].explored = true;	// TIle to the West of the player.
 			}
-			if (((playerRow - i) > 0) && ((playerCol + i) < (gameBoard[playerRow].length - 1))) {
+			if (((playerRow - i) >= 0) && ((playerCol + i) <= (gameBoard[playerRow].length - 1))) {
 				gameBoard[playerRow - i][playerCol + i].explored = true;	// Tile to the Northeast of the player.
 			}
 			if (((playerRow + i) < (gameBoard.length - 1)) && ((playerCol + i) < (gameBoard[playerRow].length - 1))) {
