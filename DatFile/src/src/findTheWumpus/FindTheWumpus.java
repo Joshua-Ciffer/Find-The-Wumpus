@@ -741,6 +741,12 @@ abstract class FindTheWumpus {
 		}
 	}
 
+	/**
+	 * This method lets the player choose an item that they want to locate on the game board
+	 * and they are given the items direction from them.  The player cannot search for an item
+	 * if they do not have the compass, and they cannot search for an item they have already
+	 * found.
+	 */
 	static void useCompass() {
 		if (compassFound) {		// Player has to have found the compass.
 			int distRow, distCol;
