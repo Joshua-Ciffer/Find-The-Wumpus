@@ -6,11 +6,10 @@ import java.util.InputMismatchException;
 /*
  *-------------------------------------Change Log-------------------------------------
  * -----01/12/2018-----
- * 
+ * -Fixed torch exploration radius with endTurn() (JC).
  * -----01/11/2018-----
  * -Fixed random wumpus movement.
- * -Fix bug with random wumpus movement.
- * -DEBUG: Check endTurn() where it sets explored tiles in a radius around the player.
+ * -DEBUG: Check endTurn() where it sets explored tiles in a radius around the player (BW).
  * -Fixed menu() when the user would complete the game (JC).
  * -Did some housekeeping stuff, annotating, etc (JC).
  * -Fixed directions for useCompass() (BW).
@@ -64,7 +63,7 @@ import java.util.InputMismatchException;
  * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
- * @version 01/11/2018
+ * @version 01/12/2018
  */
 abstract class FindTheWumpus {
 
