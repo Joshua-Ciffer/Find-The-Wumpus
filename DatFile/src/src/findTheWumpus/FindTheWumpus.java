@@ -502,7 +502,7 @@ abstract class FindTheWumpus {
 			}
 		}
 		if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {
-			System.out.print("You have found wumpus droppings. A wumpus must be near by.");
+			System.out.print("\nYou have found wumpus droppings. A wumpus must be near by.");
 		}
 		// Sets explored tiles.
 		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
