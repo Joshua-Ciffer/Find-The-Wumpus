@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 /*
  *-------------------------------------Change Log-------------------------------------
  * -----01/12/2018-----
+ * -Commented all methods and wrote more javadoc (JC).
  * -Fixed torch exploration radius with endTurn() (JC).
  * -----01/11/2018-----
  * -Fixed random wumpus movement.
@@ -393,8 +394,16 @@ abstract class FindTheWumpus {
 	}
 
 	/**
-	 * This method updates positions, collects items, and has the wumpus move
-	 * to a new position after the end of the player's turn.
+	 * This method is run after the end of the user's turn after they have chosen
+	 * an action.  If there are any items on the player's tile, they are set as found
+	 * and they are removed from the tile.  If the user has moved to the tile with
+	 * the wumpus on it, attackWumpus() is called with varying percentages of winning.
+	 * If the player did not bump into the wumpus, the wumpus moves one tile in a random
+	 * direction.  If the wumpus then bumped into the player, then attackWumpus() is
+	 * called with a lower percentage of winning.  If the player did not encounter the
+	 * wumpus at all, a check is performed to see if the wumpus is nearby and it notifies
+	 * the player.  Finally, the tile that the player is on is set to explored, as well
+	 * as any tiles in the radius of the player's torches.
 	 */
 	static void endTurn() {
 		// Player picks up any items on their tile.
@@ -914,22 +923,23 @@ abstract class FindTheWumpus {
 	/**
 	 * This method randomly determines whether or not the user wins against the
 	 * wumpus by using a percentage that varies off of different variables in the
-	 * game.
+	 * game.  After the user wins or loses, the game is over and menu() finishes
+	 * running.  The user is brought back to the main menu in main().
 	 * 
 	 * @param oddsOfWinning - The perctentage chance the player has of winning.
 	 */
 	static void attackWumpus(int oddsOfWinning) {
-		if (random.nextInt(100) < oddsOfWinning) { // If the user wins,
+		if (random.nextInt(100) < oddsOfWinning) { 	// If the user wins,
 			System.out.println(" You Beat The Wumpus!\n");
-		} else { // If the user loses,
+		} else { 	// If the user loses,
 			System.out.println(" The Wumpus Ate Your Fingers!\n");
 		}
-		gameOver = true;
+		gameOver = true;	// Causes the game to end and go back to the main menu.
 	}
 	
 	/**
 	 * This method returns the distance of two game tiles on the board using the distance formula.
-	 * The equation used is sqrt((row1 - row2)^2 + (col1 - col2)^2)
+	 * The equation used is sqrt((row1 - row2)^2 + (col1 - col2)^2).
 	 * 
 	 * @return Returns the distance between two game tiles.
 	 */
