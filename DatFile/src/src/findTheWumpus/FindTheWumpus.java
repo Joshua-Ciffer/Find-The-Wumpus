@@ -774,19 +774,11 @@ abstract class FindTheWumpus {
 					System.out.println(" (1) Weapon");
 				}
 				if (torchesFound == numTorches) {
-<<<<<<< HEAD
 					System.out.println(" (2) Torch - FOUND");
 				} else if ((torchesFound > 0) && (torchesFound < numTorches)) {
 					System.out.println(" (2) Torch " + "FOUND: " + torchesFound);
 				} else {
 					System.out.println(" (2) Torch ");
-=======
-					System.out.println("(2) Torches - FOUND");
-				} else if (torchesFound > 0 && torchesFound < numTorches) {
-					System.out.println("(2) Torches " + torchesFound + " FOUND");
-				} else{
-					System.out.println("(2) Torches ");
->>>>>>> branch 'master' of https://github.com/Joshua-Ciffer/DatFile
 				}
 				System.out.println("(3) Cancel");
 				System.out.println("(4) Wumpus");
