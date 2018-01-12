@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 /*
  *-------------------------------------Change Log-------------------------------------
  * -----01/12/2018-----
+ * -BUG: Compass doesn't work properly when searching for torches (BW).
  * -Commented all methods and wrote more javadoc (JC).
  * -Fixed torch exploration radius with endTurn() (JC).
  * -----01/11/2018-----
@@ -132,9 +133,9 @@ abstract class FindTheWumpus {
 	public static void main(String[] args) {
 		while (true) {
 			// Lists options for player to select.
-			System.out.print("--------Find The Wumpus Game--------\nBy Brian Williams, & Joshua Ciffer" + 
-					"\n (1) Easy - 5x5 Board, 3 Torches\n (2) Medium - 10x10 Board, 2 Torches" +
-					"\n (3) Hard - 15x15 Board, 1 Torch\n (4) Custom Difficulty\n (5) Quit\nEnter an option: ");
+			System.out.print("--------Find The Wumpus Game--------\nBy Brian Williams, & Joshua Ciffer" 
+					+ "\n (1) Easy - 5x5 Board, 3 Torches\n (2) Medium - 10x10 Board, 2 Torches"
+					+ "\n (3) Hard - 15x15 Board, 1 Torch\n (4) Custom Difficulty\n (5) Quit\nEnter an option: ");
 			// Take input.
 			try {
 				userResponse = userInput.next();
