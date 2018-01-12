@@ -787,7 +787,7 @@ abstract class FindTheWumpus {
 								}
 							}
 						}
-						distRow = itemRow - playerRow;
+						distRow = playerRow - itemRow;
 						distCol = playerCol - itemCol;
 						if (distCol > 0) {
 							if (distRow < 0) {
@@ -795,7 +795,7 @@ abstract class FindTheWumpus {
 							} else if (distRow > 0) {
 								System.out.println("Southwest");
 							} else {	
-								System.out.println("East");
+								System.out.println("West");
 							}
 						} else if (distCol < 0) {
 							if (distRow > 0) {
@@ -803,7 +803,7 @@ abstract class FindTheWumpus {
 							} else if (distRow < 0) {
 								System.out.println("Southeast");
 							} else {
-								System.out.println("West");
+								System.out.println("East");
 							}
 						} else {
 							if (distRow < 0) {
