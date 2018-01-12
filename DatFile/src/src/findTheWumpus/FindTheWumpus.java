@@ -764,21 +764,21 @@ abstract class FindTheWumpus {
 		 */
 		int distance = 0;
 
-		if (compassFound) {
-			// checks if you have found the item or not
+		if (compassFound) {		// Player has to have found the compass.
 			while (true) {
-				System.out.println("What item would you like to search for?");
+				// Asks user what they want to search for.
+				System.out.print("What item would you like to search for?: ");
 				if (weaponFound) {
-					System.out.println("(1) Weapon - FOUND");
+					System.out.println(" (1) Weapon - FOUND");
 				} else {
-					System.out.println("(1) Weapon");
+					System.out.println(" (1) Weapon");
 				}
 				if (torchesFound == numTorches) {
-					System.out.println("(2) Torches - FOUND");
-				} else if (torchesFound > 0 && torchesFound < numTorches) {
-					System.out.println("(2) Torches " + torchesFound + " FOUND");
+					System.out.println(" (2) Torch - FOUND");
+				} else if ((torchesFound > 0) && (torchesFound < numTorches)) {
+					System.out.println(" (2) Torch " + "FOUND: " + torchesFound);
 				} else {
-					System.out.println("(2) Torches ");
+					System.out.println(" (2) Torch ");
 				}
 				System.out.println("(3) Wumpus");
 				try {
