@@ -125,94 +125,6 @@ abstract class FindTheWumpus {
 	static boolean gameOver;
 
 	/**
-	 * The main entry point of the program.  A board with a specified difficulty is
-	 * created and then the menu is run until the game is finished.
-	 * 
-	 * @param args - Any command line arguments.
-	 */
-	public static void main(String[] args) {
-		while (true) {
-			// Lists options for player to select.
-			System.out.print("--------Find The Wumpus Game--------\nBy Brian Williams, & Joshua Ciffer" 
-					+ "\n (1) Easy - 5x5 Board, 3 Torches\n (2) Medium - 10x10 Board, 2 Torches"
-					+ "\n (3) Hard - 15x15 Board, 1 Torch\n (4) Custom Difficulty\n (5) Quit\nEnter an option: ");
-			// Take input.
-			try {
-				userResponse = userInput.next();
-			} catch (InputMismatchException e) {
-				System.out.println("\nPlease enter one of the given options.\n");
-				userInput.next();	// Clears the scanner.
-				continue;
-			}
-			switch (userResponse) {
-				case "1": {		// Easy.
-					gameBoard = makeBoard(5, 5, 3);		// 5x5 board, 3 torches.
-					menu();
-					break;
-				}
-				case "2": {		// Medium.
-					gameBoard = makeBoard(10, 10, 2);	// 10x10 board, 2 torches.
-					menu();
-					break;
-				}
-				case "3": {		// Hard.
-					gameBoard = makeBoard(15, 15, 1);	// 15x15 board, 1 torch.
-					menu();
-					break;
-				}
-				case "4": {		// Custom.
-					// User chooses game board width, height, and number of torches.
-					int rows, cols, torches;
-					while (true) {
-						try {
-							System.out.print("How tall will the game board be?: ");
-							rows = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative array size.
-						} catch (InputMismatchException e) {
-							System.out.println("\nPlease enter how tall the game board will be.\n");
-							userInput.next();	// Clears the scanner.
-							continue;
-						}
-						while (true) {
-							try {
-								System.out.print("How wide will the game board be?: ");
-								cols = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative array size.
-							} catch (InputMismatchException e) {
-								System.out.println("\nPlease enter how wide the game board will be.\n");
-								userInput.next();	// Clears the scanner.
-								continue;
-							}
-							while (true) {
-								try {
-									System.out.print("How many torches will there be?: ");
-									torches = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative amount of torches.
-								} catch (InputMismatchException e) {
-									System.out.println("\nPlease enter how many torches there will be.\n");
-									userInput.next();	// Clears the scanner.
-									continue;
-								}
-								break;
-							}
-							break;
-						}
-						break;
-					}
-					gameBoard = makeBoard(rows, cols, torches);
-					menu();
-					break;
-				}
-				case "5": {		// Quit.
-					System.exit(0);
-					break;
-				}
-				default: {
-					System.out.println("\nPlease enter one of the given options.\n");
-					continue;
-				}
-			}
-		}
-	}
-
-	/**
 	 * This method creates a new GameTile[][] with the given parameters, and with
 	 * all of the game items spawned in random positions. The game board will always
 	 * be a rectangle, the array will never be ragged.
@@ -305,6 +217,94 @@ abstract class FindTheWumpus {
 			}                    // This is so the loop actually spawns the correct amount of tiles and makes sure it isn't
 		}                        // counting the same tile more than once.
 		return newBoard;
+	}
+
+	/**
+	 * The main entry point of the program.  A board with a specified difficulty is
+	 * created and then the menu is run until the game is finished.
+	 * 
+	 * @param args - Any command line arguments.
+	 */
+	public static void main(String[] args) {
+		while (true) {
+			// Lists options for player to select.
+			System.out.print("--------Find The Wumpus Game--------\nBy Brian Williams, & Joshua Ciffer" 
+					+ "\n (1) Easy - 5x5 Board, 3 Torches\n (2) Medium - 10x10 Board, 2 Torches"
+					+ "\n (3) Hard - 15x15 Board, 1 Torch\n (4) Custom Difficulty\n (5) Quit\nEnter an option: ");
+			// Take input.
+			try {
+				userResponse = userInput.next();
+			} catch (InputMismatchException e) {
+				System.out.println("\nPlease enter one of the given options.\n");
+				userInput.next();	// Clears the scanner.
+				continue;
+			}
+			switch (userResponse) {
+				case "1": {		// Easy.
+					gameBoard = makeBoard(5, 5, 3);		// 5x5 board, 3 torches.
+					menu();
+					break;
+				}
+				case "2": {		// Medium.
+					gameBoard = makeBoard(10, 10, 2);	// 10x10 board, 2 torches.
+					menu();
+					break;
+				}
+				case "3": {		// Hard.
+					gameBoard = makeBoard(15, 15, 1);	// 15x15 board, 1 torch.
+					menu();
+					break;
+				}
+				case "4": {		// Custom.
+					// User chooses game board width, height, and number of torches.
+					int rows, cols, torches;
+					while (true) {
+						try {
+							System.out.print("How tall will the game board be?: ");
+							rows = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative array size.
+						} catch (InputMismatchException e) {
+							System.out.println("\nPlease enter how tall the game board will be.\n");
+							userInput.next();	// Clears the scanner.
+							continue;
+						}
+						while (true) {
+							try {
+								System.out.print("How wide will the game board be?: ");
+								cols = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative array size.
+							} catch (InputMismatchException e) {
+								System.out.println("\nPlease enter how wide the game board will be.\n");
+								userInput.next();	// Clears the scanner.
+								continue;
+							}
+							while (true) {
+								try {
+									System.out.print("How many torches will there be?: ");
+									torches = Math.abs(userInput.nextInt());	// Stores the absolute value to prevent negative amount of torches.
+								} catch (InputMismatchException e) {
+									System.out.println("\nPlease enter how many torches there will be.\n");
+									userInput.next();	// Clears the scanner.
+									continue;
+								}
+								break;
+							}
+							break;
+						}
+						break;
+					}
+					gameBoard = makeBoard(rows, cols, torches);
+					menu();
+					break;
+				}
+				case "5": {		// Quit.
+					System.exit(0);
+					break;
+				}
+				default: {
+					System.out.println("\nPlease enter one of the given options.\n");
+					continue;
+				}
+			}
+		}
 	}
 
 	/**
@@ -411,21 +411,21 @@ abstract class FindTheWumpus {
 		if (gameBoard[playerRow][playerCol].weaponHere) {
 			weaponFound = true;
 			gameBoard[playerRow][playerCol].weaponHere = false;
-			System.out.print("You found the weapon!");
+			System.out.println("You found the weapon!");
 		}
 		if (gameBoard[playerRow][playerCol].compassHere) {
 			compassFound = true;
 			gameBoard[playerRow][playerCol].compassHere = false;
-			System.out.print("You found the compass!");
+			System.out.println("You found the compass!");
 		}
 		if (gameBoard[playerRow][playerCol].torchHere) {
 			torchesFound++;
 			gameBoard[playerRow][playerCol].torchHere = false;
-			System.out.print("You found a torch!");
+			System.out.println("You found a torch!");
 		}
 		// Checks to see if the user bumped into the wumpus.
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the player bumped into the wumpus,
-			System.out.print("You bumped into the wumpus!");
+			System.out.println("You bumped into the wumpus!");
 			if (weaponFound) {
 				attackWumpus(80);	// 80% chance of winning.
 			} else {
@@ -509,18 +509,18 @@ abstract class FindTheWumpus {
 				}
 				break;
 			}
+			// If the wumpus is close by,
+			if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {
+				System.out.println("You have found wumpus droppings. A wumpus must be near by.");
+	}
 			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus bumped into the player,
-				System.out.print("The wumpus bumped into you!");
+				System.out.println("The wumpus bumped into you!");
 				if (weaponFound) {
 					attackWumpus(65);	// 65% chance of winning.
 				} else {
 					attackWumpus(5); 	// 5% chance of winning.
 				}
 			}
-		}
-		// If the wumpus is close by,
-		if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {
-			System.out.print("You have found wumpus droppings. A wumpus must be near by.");
 		}
 		// Sets explored tiles.
 		gameBoard[playerRow][playerCol].explored = true;	// Tile player is currently on.
@@ -774,13 +774,22 @@ abstract class FindTheWumpus {
 					System.out.println(" (1) Weapon");
 				}
 				if (torchesFound == numTorches) {
+<<<<<<< HEAD
 					System.out.println(" (2) Torch - FOUND");
 				} else if ((torchesFound > 0) && (torchesFound < numTorches)) {
 					System.out.println(" (2) Torch " + "FOUND: " + torchesFound);
 				} else {
 					System.out.println(" (2) Torch ");
+=======
+					System.out.println("(2) Torches - FOUND");
+				} else if (torchesFound > 0 && torchesFound < numTorches) {
+					System.out.println("(2) Torches " + torchesFound + " FOUND");
+				} else{
+					System.out.println("(2) Torches ");
+>>>>>>> branch 'master' of https://github.com/Joshua-Ciffer/DatFile
 				}
-				System.out.println("(3) Wumpus");
+				System.out.println("(3) Cancel");
+				System.out.println("(4) Wumpus");
 				try {
 					userResponse = userInput.next();
 				} catch (InputMismatchException e) {
@@ -790,101 +799,69 @@ abstract class FindTheWumpus {
 				}
 				break;
 			}
-			// Case 1 + 3 competed
 			switch (userResponse) {
-				case "1": {
-					if (weaponFound) {
-						System.out.println("You already found this item");
+			case "1": {
+				if (weaponFound) {
+					System.out.println("You already found this item");
+				} else {
+					for (int row = 0; row < gameBoard.length; row++) {
+						for (int col = 0; col < gameBoard[0].length; col++) {
+							if (gameBoard[row][col].weaponHere == true) {
+								itemRow = row;
+								itemCol = col;
+								break;
+							} else {
+								continue;
+							}
+						}
+					}
+					distRow = playerRow - itemRow;
+					distCol = playerCol - itemCol;
+					if (distCol > 0) {
+						if (distRow < 0) {
+							System.out.println("Southwest");
+						} else if (distRow > 0) {
+							System.out.println("Northwest");
+						} else {	
+							System.out.println("West");
+						}
+					} else if (distCol < 0) {
+						if (distRow > 0) {
+							System.out.println("Northeast");
+						} else if (distRow < 0) {
+							System.out.println("Southeast");
+						} else {
+							System.out.println("East");
+						}
 					} else {
-						for (int row = 0; row < gameBoard.length; row++) {
-							for (int col = 0; col < gameBoard[0].length; col++) {
-								if (gameBoard[row][col].weaponHere == true) {
+						if (distRow < 0) {
+							System.out.println("South");
+						} else {
+							System.out.println("North");
+						}
+					}
+				}
+				break;
+			}
+			case "2": {
+				if (torchesFound == numTorches) {
+					System.out.println("You already found all of thesse itmes");
+				} else {
+					for (int row = 0; row < gameBoard.length; row++) {
+						for (int col = 0; col < gameBoard[row].length; col++) {
+							if (gameBoard[row][col].torchHere == true) {
+								if(distance > (int)findDistance(row, col)){
+									distance =(int)findDistance(row,col);
 									itemRow = row;
 									itemCol = col;
-									break;
 								} else {
 									continue;
 								}
-							}
-						}
-						distRow = playerRow - itemRow;
-						distCol = playerCol - itemCol;
-						if (distCol > 0) {
-							if (distRow < 0) {
-								System.out.println("Southwest");
-							} else if (distRow > 0) {
-								System.out.println("Northwest");
-							} else {	
-								System.out.println("West");
-							}
-						} else if (distCol < 0) {
-							if (distRow > 0) {
-								System.out.println("Northeast");
-							} else if (distRow < 0) {
-								System.out.println("Southeast");
 							} else {
-								System.out.println("East");
-							}
-						} else {
-							if (distRow < 0) {
-								System.out.println("South");
-							} else {
-								System.out.println("North");
+								continue;
 							}
 						}
 					}
-					break;
-				}
-				case "2": {
-					if (torchesFound == numTorches) {
-						System.out.println("You already found all of thesse itmes");
-					} else {
-						for (int row = 0; row < gameBoard.length; row++) {
-							for (int col = 0; col < gameBoard[row].length; col++) {
-								if (gameBoard[row][col].torchHere == true) {
-									if(distance > (int)findDistance(row, col)){
-										distance =(int)findDistance(row,col);
-										itemRow = row;
-										itemCol = col;
-									} else {
-										continue;
-									}
-								} else {
-									continue;
-								}
-							}
-						}
-						distRow = playerRow - itemRow;
-						distCol = playerCol - itemCol;
-						if (distCol > 0) {
-							if (distRow < 0) {
-								System.out.println("Northwest");
-							} else if (distRow > 0) {
-								System.out.println("Southwest");
-							} else {	
-								System.out.println("West");
-							}
-						} else if (distCol < 0) {
-							if (distRow > 0) {
-								System.out.println("Northeast");
-							} else if (distRow < 0) {
-								System.out.println("Southeast");
-							} else {
-								System.out.println("East");
-							}
-						} else {
-							if (distRow < 0) {
-								System.out.println("South");
-							} else {
-								System.out.println("North");
-							}
-						}
-					}
-					break;
-				}
-				case "3": {
-					itemCol = wumpusCol;
-					itemRow = wumpusRow;
 					distRow = playerRow - itemRow;
 					distCol = playerCol - itemCol;
 					if (distCol > 0) {
@@ -910,14 +887,47 @@ abstract class FindTheWumpus {
 							System.out.println("North");
 						}
 					}
-					break;
 				}
-				default:
-					System.out.println("Incorrect response");
+				break;
+			}
+			case "4": {
+				itemCol = wumpusCol;
+				itemRow = wumpusRow;
+				distRow = playerRow - itemRow;
+				distCol = playerCol - itemCol;
+				if (distCol > 0) {
+					if (distRow < 0) {
+						System.out.println("Northwest");
+					} else if (distRow > 0) {
+						System.out.println("Southwest");
+					} else {	
+						System.out.println("West");
+					}
+				} else if (distCol < 0) {
+					if (distRow > 0) {
+						System.out.println("Northeast");
+					} else if (distRow < 0) {
+						System.out.println("Southeast");
+					} else {
+						System.out.println("East");
+					}
+				} else {
+					if (distRow < 0) {
+						System.out.println("South");
+					} else {
+						System.out.println("North");
+					}
 				}
-		} else {
-			System.out.println("\nYou haven't found the compass yet!");
-		}
+				break;
+			}
+			case "3":
+				menu();
+			default:
+				System.out.println("Incorrect response");
+			}
+	} else {
+		System.out.println("\nYou haven't found the compass yet!");
+	}
 		endTurn();
 	}
 
