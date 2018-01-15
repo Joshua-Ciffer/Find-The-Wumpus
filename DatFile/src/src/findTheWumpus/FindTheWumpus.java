@@ -5,6 +5,9 @@ import java.util.InputMismatchException;
 
 /*
  *-------------------------------------Change Log-------------------------------------
+ * -----01/15/2018
+ * -Last minute tweaks (JC).
+ * -Fixed bug when searching for torches with compass.
  * -----01/12/2018-----
  * -BUG: Compass doesn't work properly when searching for torches (BW).
  * -Commented all methods and wrote more javadoc (JC).
@@ -46,8 +49,6 @@ import java.util.InputMismatchException;
  * -----01/02/2018-----
  * -Started writing makeBoard() (JC).
  * -Wrote out templates for all necessary methods and state variables (BW).
- * 
- * https://stackoverflow.com/questions/11859534/how-to-calculate-the-total-time-it-takes-for-multiple-threads-to-finish-executin 
  */
 /**
  * This class contains the methods to create a game board using GameTile objects
@@ -65,7 +66,7 @@ import java.util.InputMismatchException;
  * This class is abstract because it does not need to be instantiated.
  * 
  * @author Joshua Ciffer, Brian Williams
- * @version 01/12/2018
+ * @version 01/15/2018
  */
 abstract class FindTheWumpus {
 
@@ -314,7 +315,7 @@ abstract class FindTheWumpus {
 	static void menu() {
 		System.out.print("\n");
 		while (true) {
-//			printBoard();	// Uncomment this for debugging purposes.  This prints out the board before player's turn.
+			printBoard();	// Uncomment this for debugging purposes.  This prints out the board before player's turn.
 			// Lists options based off of what items the player has found.
 			System.out.println("Your Turn:\n (1) Display Board\n (2) Move");
 			if (compassFound) {
@@ -322,7 +323,7 @@ abstract class FindTheWumpus {
 			} else {
 				System.out.println(" (3) LOCKED");
 			}
-			if (torchesFound > 2) {
+			if ((torchesFound >= 2) && (findDistance(wumpusRow, wumpusCol) <= 2)) {
 				System.out.println(" (4) Attack Wumpus");
 			} else {
 				System.out.println(" (4) LOCKED");
@@ -357,6 +358,7 @@ abstract class FindTheWumpus {
 				}
 				case "4": { 	// Attack Wumpus.
 					if ((torchesFound >= 2) && (findDistance(wumpusRow, wumpusCol) <= 2)) {		// Player must have 2 torches and be 2 tiles away from wumpus.
+						System.out.print("\nYou attacked the wumpus!");
 						if (findDistance(wumpusRow, wumpusCol) == 2) {		// If wumpus is 2 tiles away,
 							if (weaponFound) {
 								attackWumpus(75);	// 75% chance of winning.
@@ -425,7 +427,7 @@ abstract class FindTheWumpus {
 		}
 		// Checks to see if the user bumped into the wumpus.
 		if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the player bumped into the wumpus,
-			System.out.println("You bumped into the wumpus!");
+			System.out.print("You bumped into the wumpus!");
 			if (weaponFound) {
 				attackWumpus(80);	// 80% chance of winning.
 			} else {
@@ -509,17 +511,15 @@ abstract class FindTheWumpus {
 				}
 				break;
 			}
-			// If the wumpus is close by,
-			if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {
-				System.out.println("You have found wumpus droppings. A wumpus must be near by.");
-	}
 			if ((playerRow == wumpusRow) && (playerCol == wumpusCol)) {		// If the wumpus bumped into the player,
-				System.out.println("The wumpus bumped into you!");
+				System.out.print("The wumpus bumped into you!");
 				if (weaponFound) {
 					attackWumpus(65);	// 65% chance of winning.
 				} else {
 					attackWumpus(5); 	// 5% chance of winning.
 				}
+			} else if (findDistance(wumpusRow, wumpusCol) <= torchesFound) {	// If the wumpus is close by,
+				System.out.println("You have found wumpus droppings. A wumpus must be near by.");
 			}
 		}
 		// Sets explored tiles.
@@ -749,10 +749,10 @@ abstract class FindTheWumpus {
 	 */
 	static void useCompass() {
 		if (compassFound) {		// Player has to have found the compass.
+			System.out.print("\n");
 			int distRow, distCol;
 			while (true) {
 				// Asks user what they want to search for.
-				System.out.print("What item would you like to search for?: ");
 				if (weaponFound) {
 					System.out.println(" (1) Weapon - FOUND");
 				} else {
@@ -765,7 +765,8 @@ abstract class FindTheWumpus {
 				} else {
 					System.out.println(" (2) Torch ");
 				}
-				System.out.println("(3) Wumpus\n (4) Cancel");
+				System.out.println(" (3) Wumpus\n (4) Cancel");
+				System.out.print("What would you like to search for?: ");
 				// Takes user input.
 				try {
 					userResponse = userInput.next();
@@ -785,25 +786,25 @@ abstract class FindTheWumpus {
 							distCol = playerCol - weaponCol;
 							if (distCol > 0) {	  // If item is left of player,
 								if (distRow < 0) {	  // If item is below player,
-									System.out.println("Weapon is to the Southwest");
+									System.out.println("\nWeapon is to the Southwest.\n");
 								} else if (distRow > 0) {	// If item is above player,
-									System.out.println("Weapon is to the Northwest");
+									System.out.println("\nWeapon is to the Northwest.\n");
 								} else {	// If item is directly to the left,
-									System.out.println("Weapon is to the West");
+									System.out.println("\nWeapon is to the West.\n");
 								}
 							} else if (distCol < 0) {	// If item is right of player,
 								if (distRow > 0) {	  // If item is above player,
-									System.out.println("Weapon is to the Northeast");
+									System.out.println("\nWeapon is to the Northeast.\n");
 								} else if (distRow < 0) {	 // If item is below player,
-									System.out.println("Weapon is to the Southeast");
+									System.out.println("\nWeapon is to the Southeast.\n");
 								} else {	// If item is directly to the right,
-									System.out.println("Weapon is to the East");
+									System.out.println("\nWeapon is to the East.\n");
 								}
 							} else {
 								if (distRow < 0) {	  // If item is directly below,
-									System.out.println("Weapon is to the South");
+									System.out.println("\nWeapon is to the South.\n");
 								} else {	// If item is directly above,
-									System.out.println("Weapon is to the North");
+									System.out.println("\nWeapon is to the North.\n");
 								}
 							}	
 						}
@@ -817,19 +818,14 @@ abstract class FindTheWumpus {
 						} else {
 							// Sorts through the game board to find the closest torch to the player.
 							int torchRow = 0, torchCol = 0, distance = Integer.MAX_VALUE;
-							for (int row = 0; row < gameBoard.length; row++) {
+							for (int row = 0; row < gameBoard.length; row++) {	   // Sorts through each game tile in the board.
 								for (int col = 0; col < gameBoard[row].length; col++) {
 									if (gameBoard[row][col].torchHere) {
-										if (findDistance(row, col) < distance){
-											distance = findDistance(row, col);
+										if (findDistance(row, col) < distance) {	// If this torch is closer to the player than the current closest torch,
+											distance = findDistance(row, col);		// Sets the current torch row and col to the closest one.
 											torchRow = row;
 											torchCol = col;
-											break;
-										} else {
-											continue;
 										}
-									} else {
-										continue;
 									}
 								}
 							}
@@ -838,25 +834,25 @@ abstract class FindTheWumpus {
 							distCol = playerCol - torchCol;
 							if (distCol > 0) {	  // If item is left of player,
 								if (distRow < 0) {	  // If item is below player,
-									System.out.println("Weapon is to the Southwest");
+									System.out.println("\nTorch is to the Southwest.\n");
 								} else if (distRow > 0) {	// If item is above player,
-									System.out.println("Weapon is to the Northwest");
+									System.out.println("\nTorch is to the Northwest.\n");
 								} else {	// If item is directly to the left,
-									System.out.println("Weapon is to the West");
+									System.out.println("\nTorch is to the West.\n");
 								}
 							} else if (distCol < 0) {	// If item is right of player,
 								if (distRow > 0) {	  // If item is above player,
-									System.out.println("Weapon is to the Northeast");
+									System.out.println("\nTorch is to the Northeast.\n");
 								} else if (distRow < 0) {	 // If item is below player,
-									System.out.println("Weapon is to the Southeast");
+									System.out.println("\nTorch is to the Southeast.\n");
 								} else {	// If item is directly to the right,
-									System.out.println("Weapon is to the East");
+									System.out.println("\nTorch is to the East.\n");
 								}
 							} else {
 								if (distRow < 0) {	  // If item is directly below,
-									System.out.println("Weapon is to the South");
+									System.out.println("\nTorch is to the South.\n");
 								} else {	// If item is directly above,
-									System.out.println("Weapon is to the North");
+									System.out.println("\nTorch is to the North.\n");
 								}
 							}	
 						}
@@ -869,25 +865,25 @@ abstract class FindTheWumpus {
 						distCol = playerCol - wumpusCol;
 						if (distCol > 0) {	  // If item is left of player,
 							if (distRow < 0) {	  // If item is below player,
-								System.out.println("Wumpus is to the Southwest");
+								System.out.println("\nWumpus is to the Southwest.\n");
 							} else if (distRow > 0) {	// If item is above player,
-								System.out.println("Wumpus is to the Northwest");
+								System.out.println("\nWumpus is to the Northwest.\n");
 							} else {	// If item is directly to the left,
-								System.out.println("Wumpus is to the West");
+								System.out.println("\nWumpus is to the West.\n");
 							}
 						} else if (distCol < 0) {	// If item is right of player,
 							if (distRow > 0) {	  // If item is above player,
-								System.out.println("Wumpus is to the Northeast");
+								System.out.println("\nWumpus is to the Northeast.\n");
 							} else if (distRow < 0) {	 // If item is below player,
-								System.out.println("Wumpus is to the Southeast");
+								System.out.println("\nWumpus is to the Southeast.\n");
 							} else {	// If item is directly to the right,
-								System.out.println("Wumpus is to the East");
+								System.out.println("\nWumpus is to the East.\n");
 							}
 						} else {
 							if (distRow < 0) {	  // If item is directly below,
-								System.out.println("Wumpus is to the South");
+								System.out.println("\nWumpus is to the South.\n");
 							} else {	// If item is directly above,
-								System.out.println("Wumpus is to the North");
+								System.out.println("\nWumpus is to the North.\n");
 							}
 						}	
 						endTurn();
@@ -927,7 +923,7 @@ abstract class FindTheWumpus {
 	}
 	
 	/**
-	 * This method returns the distance of two game tiles on the board using the distance formula.
+	 * This method returns the distance from the player to another game tile using the distance formula.
 	 * The equation used is sqrt((row1 - row2)^2 + (col1 - col2)^2).
 	 * 
 	 * @return Returns the distance between two game tiles.

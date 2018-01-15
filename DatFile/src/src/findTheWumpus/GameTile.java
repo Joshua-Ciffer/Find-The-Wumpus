@@ -23,5 +23,34 @@ class GameTile {
 	 * Constructs a game tile object with nothing on it.
 	 */
 	GameTile() {}
+	
+	/**
+	 * Returns a string representation of the content of this object.
+	 * <br><br>
+	 * This method overrides Object.toString()
+	 * 
+	 * @return Content of this object in a string.
+	 */
+	@Override
+	public String toString() {
+		return "explored:  " + explored + "\nplayerHere: " + playerHere + "\nwumpusHere: " + wumpusHere
+				+ "\nweaponHere: " + weaponHere + "\ncompassHere: " + compassHere + "\ntorchHere: " + torchHere;
+	}
+	
+	/**
+	 * Checks equality of the content of two GameTile objects.
+	 * <br><br>
+	 * This method overrides Object.equals()
+	 * 
+	 * @return Equality of two GameTile objects.
+	 */
+	@Override
+	public boolean equals(Object gameTile) {
+		if (this.toString().equalsIgnoreCase(((GameTile)gameTile).toString())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 }
