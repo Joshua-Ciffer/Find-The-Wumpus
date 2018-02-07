@@ -1,0 +1,1 @@
+typeSearchIndex = [{"p":"src.findTheWumpus","l":"FindTheWumpus"},{"p":"src.findTheWumpus","l":"GameTile"}]
